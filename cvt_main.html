@@ -359,8 +359,9 @@ a1.xcoord=o1.xcoord+r*Math.cos(rad(theta2));
 a1.ycoord=o1.ycoord+r*Math.sin(rad(theta2));
 b1.xcoord=a1.xcoord+l*Math.cos(rad(phi));
 b1.ycoord=o1.ycoord;
-
-printcomment("Limits of r1 for the set r2 : " +r1+" and\n "+r2+" ",1);
+r1=(Math.round(r1*10000)-Math.round(r1)*10000)/10000+Math.round(r1);
+r2=(Math.round(r2*10000)-Math.round(r2)*10000)/10000+Math.round(r2);
+printcomment("<b><u>Output:</u></b>\nValue of r1  : " +r1+"cm and r2   :\n "+r2+"cm ",1);
 printcomment("gear ratio is : " +R2,2);
 
 draw();
@@ -387,7 +388,7 @@ function draw()
   ctx.stroke();
   d.xcoord=125;
   d.ycoord=120;
-  pointjoin(d,a,ctx,"#CCCC00",12);
+  pointjoin(d,a,ctx,"#ff0000",12);
   pointdisp(d,ctx,15,"#000000","#003366",'','','');
 
 
@@ -645,7 +646,7 @@ send an email to adityaraman09@gmail.com for any communication
 <div id="commentboxright"></div>
 
 <!-- DND-Title of region for variables display --> 
-<div id="vartitle">VARIABLES</div>
+<div id="vartitle">VARIABLES(INPUT)</div>
 
 <!-- Region for Input parameters of simulation -->
 <div id="variables">
@@ -669,6 +670,14 @@ repeat block with new variable name and new id for widgets-->
 <input id="r3spinner"></input></div>
 <div id="r3slider"></div>
 </div> -->
+
+
+<div id = "omega2set" class="variable">
+<div class="varname"><p title='Input Angular Velocity'>omega; (rad/s) </p>
+<input id="omega2spinner"></input></div>
+<div id="omega2slider"></div>
+</div>
+
 <div id = "theta1set" class="variable"> 
 <div class="varname"><p title='Input Angle'>theta1; (&deg;) </p>
 <input id="theta1spinner"></input></div>
@@ -680,12 +689,6 @@ repeat block with new variable name and new id for widgets-->
 <div id="theta2slider"></div>
 </div> 
 
-
-<div id = "omega2set" class="variable">
-<div class="varname"><p title='Input Angular Velocity'>omega; (rad/s) </p>
-<input id="omega2spinner"></input></div>
-<div id="omega2slider"></div>
-</div>
 </div>
 
 <!-- DND-Title of region for controls display -->
