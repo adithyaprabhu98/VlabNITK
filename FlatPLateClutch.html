@@ -52,6 +52,11 @@ The simulation requires JavaScript to be enabled.
                 <p title="Height of the Governor">RPM &nbsp; </p>
                 <input id="hval1" type="textbox" style="background-color:white;width:60px;color:black"></div>
         </div>
+        <div id="nset" class="variable">
+            <div class="varname">
+                <p title="Height of the Governor">Torque &nbsp; </p>
+                <input id="hval2" type="textbox" style="background-color:white;width:60px;color:black"></div>
+        </div>
 
 
     </div>
@@ -91,7 +96,7 @@ The simulation requires JavaScript to be enabled.
 
         var r_out = 60; //radius of big plate
         var r_in = 9; //radius of shafts
-        var r = 48; //radius of small plate
+        var r = 38; //radius of small plate
         var x1 = 0; //coordinates for outer disc radial rods
         var y1 = 0;
         var x2 = 0;
@@ -159,23 +164,23 @@ The simulation requires JavaScript to be enabled.
 
         function varinit() {
             varchange();
-            $('#nslider').slider("value", 100);
-            $('#nspinner').spinner("value", 100);
+            $('#nslider').slider("value", 0);
+            $('#nspinner').spinner("value", 0);
 
-            $('#Mslider').slider("value", 10);
-            $('#Mspinner').spinner("value", 10);
+            $('#Mslider').slider("value", 0);
+            $('#Mspinner').spinner("value", 0);
 
         }
 
         function varchange() {
             $('#nslider').slider({
-                max: 5000,
-                min: 100,
+                max: 2000,
+                min: 0,
                 step: 1
             }); // slider initialisation : jQuery widget
             $('#nspinner').spinner({
-                max: 5000,
-                min: 100,
+                max: 2000,
+                min: 0,
                 step: 1
             }); // number initialisation : jQuery widget
             $("#nslider").on("slide", function(e, ui) {
@@ -192,13 +197,13 @@ The simulation requires JavaScript to be enabled.
                 varchange()
             });
             $('#Mslider').slider({
-                max: 250,
-                min: 10,
+                max: 100,
+                min: 0,
                 step: 0.5
             }); // slider initialisation : jQuery widget
             $('#Mspinner').spinner({
-                max: 250,
-                min: 10,
+                max: 100,
+                min: 0,
                 step: 0.5
             }); // number initialisation : jQuery widget
             $("#Mslider").on("slide", function(e, ui) {
@@ -225,16 +230,18 @@ The simulation requires JavaScript to be enabled.
             thetain = thetain + (0.2 * deg(omegain));
             x1 = r_out * Math.cos(rad(thetain));
             y1 = r_out * Math.sin(rad(thetain));
-            x2 = r_out * Math.cos(rad(thetain + 90));
-            y2 = r_out * Math.sin(rad(thetain + 90));
-            omegaout = (400) - ((400 - 100) * (Thrust - 200) / 5000);
+            // x2 = r_out * Math.cos(rad(thetain + 90));
+            // y2 = r_out * Math.sin(rad(thetain + 90));
+            omegaout =  ((400 - 100) * (Thrust) / 5000);
             document.getElementById("hval1").value = (omegaout * thirtyByPi).toFixed(0);
+            
+            document.getElementById("hval2").value = ((Thrust/4000)*(r+r_out)).toFixed(0);
             thetaout = thetaout + (0.2 * deg(omegaout));
             x3 = r * Math.cos(rad(thetaout));
             y3 = r * Math.sin(rad(thetaout));
-            x4 = r * Math.cos(rad(thetaout + 90));
-            y4 = r * Math.sin(rad(thetaout + 90));
-            d = 30 - (30 * Thrust / 10000) + 1;
+            // x4 = r * Math.cos(rad(thetaout + 90));
+            // y4 = r * Math.sin(rad(thetaout + 90));
+            d = 30 - (30 * Thrust / 5000) + 1;
             //front view variables
             o.xcoord = 0;
             o.ycoord = 0;
@@ -273,11 +280,11 @@ The simulation requires JavaScript to be enabled.
             q1.ycoord = r;
             q2.xcoord = 67;
             q2.ycoord = (-1 * r);
-            a1.xcoord = (16 + 7 * ((Thrust - 100) / 7000));
+            a1.xcoord = (18 - 7 * ((Thrust) / 5000));
             a1.ycoord = r - 2;
             a2.xcoord = 16;
             a2.ycoord = 5;
-            a3.xcoord = (16 + 7 * ((Thrust - 100) / 7000));
+            a3.xcoord = (18 - 7 * ((Thrust) / 5000));
             a3.ycoord = -(r - 2);
             a4.xcoord = 16;
             a4.ycoord = -5;
@@ -285,13 +292,13 @@ The simulation requires JavaScript to be enabled.
             t2.xcoord = 15;
             t1.ycoord = 15;
             t2.ycoord = -15;
-            b1.xcoord = 44 + 2 * ((Thrust - 100) / 7000);
+            b1.xcoord = 44 - 2 * ((Thrust) / 5000);
             b1.ycoord = r - 2;
-            b2.xcoord = 44 + 2 * ((Thrust - 100) / 7000);
+            b2.xcoord = 44 - 2 * ((Thrust) / 5000);
             b2.ycoord = 30;
-            b3.xcoord = 44 + 2 * ((Thrust - 100) / 7000);
+            b3.xcoord = 44 - 2 * ((Thrust) / 5000);
             b3.ycoord = -(r - 2);
-            b4.xcoord = 44 + 2 * ((Thrust - 100) / 7000);
+            b4.xcoord = 44 - 2 * ((Thrust) / 5000);
             b4.ycoord = -30;
 
 
@@ -351,14 +358,14 @@ The simulation requires JavaScript to be enabled.
             //Front
             pointdisp(o, ctx, r_out, '#600217', '#600217');
             pointjoin(o, z1, ctx, "#000000", 5);
-            pointjoin(o, z2, ctx, "#000000", 5);
-            pointjoin(o, z3, ctx, "#000000", 5);
-            pointjoin(o, z4, ctx, "#000000", 5);
+            // pointjoin(o, z2, ctx, "#000000", 5);
+            // pointjoin(o, z3, ctx, "#000000", 5);
+            // pointjoin(o, z4, ctx, "#000000", 5);
             pointdisp(o, ctx, r, '#7F00FF', '#7F00FF');
             pointjoin(o, s1, ctx, "#0885d8", 5);
-            pointjoin(o, s2, ctx, "#0885d8", 5);
-            pointjoin(o, s3, ctx, "#0885d8", 5);
-            pointjoin(o, s4, ctx, "#0885d8", 5);
+            // pointjoin(o, s2, ctx, "#0885d8", 5);
+            // pointjoin(o, s3, ctx, "#0885d8", 5);
+            // pointjoin(o, s4, ctx, "#0885d8", 5);
             pointdisp(o, ctx, r_in, '#013220', '#013220');
             //Top
             pointjoin(p1, p2, ctx, "#0C0C0C", 2 * r_in);
