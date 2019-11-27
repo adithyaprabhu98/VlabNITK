@@ -52,6 +52,11 @@ The simulation requires JavaScript to be enabled.
                 <p title="Height of the Governor">RPM &nbsp; </p>
                 <input id="hval1" type="textbox" style="background-color:white;width:60px;color:black"></div>
         </div>
+        <div id="nset" class="variable">
+            <div class="varname">
+                <p title="Height of the Governor">Torque &nbsp; </p>
+                <input id="hval2" type="textbox" style="background-color:white;width:60px;color:black"></div>
+        </div>
 
 
     </div>
@@ -229,6 +234,8 @@ The simulation requires JavaScript to be enabled.
             // y2 = r_out * Math.sin(rad(thetain + 90));
             omegaout =  ((400 - 100) * (Thrust) / 5000);
             document.getElementById("hval1").value = (omegaout * thirtyByPi).toFixed(0);
+            
+            document.getElementById("hval2").value = ((Thrust/4000)*(r+r_out)).toFixed(0);
             thetaout = thetaout + (0.2 * deg(omegaout));
             x3 = r * Math.cos(rad(thetaout));
             y3 = r * Math.sin(rad(thetaout));
