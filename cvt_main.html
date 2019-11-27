@@ -329,21 +329,21 @@ r2=k1;
 r1=(omega2/omega1)*r2;
 rad1=100*r1/60;
 rad2=100*r2/60;
-$('#r1slider').slider("value", rad1);	
-$('#r1spinner').spinner("value",rad1);
-$('#r2slider').slider("value", rad2);	
-$('#r2spinner').spinner("value",rad2);
-rad2=$('#r1spinner').spinner("value");
-r2=rad2*60/100;
-k2=(-(2*Math.PI*Math.PI-8+1250*Math.PI)*r2+Math.sqrt((2*Math.PI*Math.PI-8+1250*Math.PI)*r2*(2*Math.PI*Math.PI-8+1250*Math.PI)*r2-4*(Math.PI*Math.PI+4)*((Math.PI*Math.PI+4)*r2*r2+1250*Math.PI*r2*r2-358150)))/(2*(Math.PI*Math.PI+4));
-r1=k2;
-rad1=r1*100/60;
-omega2=omega1*r1/r2;
-$('#r1slider').slider("value", rad1);	
-$('#r1spinner').spinner("value",rad1);
-$('#omega2slider').slider("value", omega2);	
-$('#omega2spinner').spinner("value",omega2);
-rad1=$('#r2spinner').spinner("value");
+// $('#r1slider').slider("value", rad1);	
+// $('#r1spinner').spinner("value",rad1);
+// $('#r2slider').slider("value", rad2);	
+// $('#r2spinner').spinner("value",rad2);
+// rad2=$('#r1spinner').spinner("value");
+// r2=rad2*60/100;
+// k2=(-(2*Math.PI*Math.PI-8+1250*Math.PI)*r2+Math.sqrt((2*Math.PI*Math.PI-8+1250*Math.PI)*r2*(2*Math.PI*Math.PI-8+1250*Math.PI)*r2-4*(Math.PI*Math.PI+4)*((Math.PI*Math.PI+4)*r2*r2+1250*Math.PI*r2*r2-358150)))/(2*(Math.PI*Math.PI+4));
+// r1=k2;
+// rad1=r1*100/60;
+// omega2=omega1*r1/r2;
+// $('#r1slider').slider("value", rad1);	
+// $('#r1spinner').spinner("value",rad1);
+// $('#omega2slider').slider("value", omega2);	
+// $('#omega2spinner').spinner("value",omega2);
+// rad1=$('#r2spinner').spinner("value");
 
 
 printcomment("",2);
@@ -722,7 +722,7 @@ repeat block with new variable name and new id for widgets-->
 <input id="omega2spinner"></input></div>
 <div id="omega2slider"></div>
 </div>
-<div id = "r1set" class="variable">
+<!-- <div id = "r1set" class="variable">
 <div class="varname"><p title='Input Radius'>r1; (mm) </p>
 <input id="r1spinner"></input></div>
 <div id="r1slider"></div>
@@ -731,7 +731,7 @@ repeat block with new variable name and new id for widgets-->
 <div class="varname"><p title='Input Radius'>r2; (mm) </p>
 <input id="r2spinner"></input></div>
 <div id="r2slider"></div>
-</div>
+</div> -->
  
 <div id = "theta1set" class="variable"> 
 <div class="varname"><p title='Input Angle'>theta1; (&deg;) </p>
