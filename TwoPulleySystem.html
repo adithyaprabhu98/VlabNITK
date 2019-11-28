@@ -369,7 +369,7 @@ ctx.beginPath();
   // ctx.strokeText('\u03A9 = ' + parseFloat(omega.toFixed(2)) + ' rad/s', o.xcoord + 120, o.ycoord + ceil_to_floor/2);  
   // ctx.restore();
 
-  printcomment('\u03A9 = ' + parseFloat(omega.toFixed(2)) + ' rad/s', 1);
+  printcomment('\u03A9 = ' + parseFloat(omega.toFixed(2)) + ' rad/s. \n This is a 1 dof system equivalent to a single mass supported by spring of equi. constant Keq = ' + parseFloat(calculateKEffective(k1, k2).toFixed(1)) + 'N/m', 1);
 
 
 
@@ -418,7 +418,18 @@ function drawFBD(){
   drawPulley(ctx,p1.xcoord,p1.ycoord,pulley_rad);
   drawArrowFBD(DIRUP, p1.xcoord - pulley_rad, p1.ycoord,  Math.abs($('#k1spinner').spinner("value") * (p1.ycoord-o.ycoord))/2, DIRLEFT);
   drawArrowFBD(DIRUP, p1.xcoord + pulley_rad, p1.ycoord,  Math.abs($('#k1spinner').spinner("value") * (p1.ycoord-o.ycoord))/2, DIRRIGHT);	
-  drawArrowFBD(DIRDOWN, p1.xcoord , p1.ycoord,  Math.abs($('#k1spinner').spinner("value") * (p1.ycoord-o.ycoord)), DIRDOWN);	
+  drawArrowFBD(DIRDOWN, p1.xcoord , p1.ycoord,  Math.abs($('#k1spinner').spinner("value") * (p1.ycoord-o.ycoord)), DIRLEFT);
+
+
+	ctx.save();
+	ctx.lineWidth=1;
+	ctx.strokeStyle="#000000";
+	ctx.font = "10px Arial";
+	var body_length = 50;
+	ctx.strokeText('W', p1.xcoord - pulley_rad - 5, p1.ycoord - body_length-5 );  
+	ctx.strokeText('W',  p1.xcoord + pulley_rad - 5, p1.ycoord - body_length - 5);  
+	ctx.strokeText('k1*x1', p1.xcoord - 10 ,  p1.ycoord + body_length + 10);  
+	ctx.restore();	
   //draw pulley 1 fbd
   
 
@@ -427,13 +438,33 @@ function drawFBD(){
   //draw pulley 2 fbd
   drawArrowFBD(DIRDOWN, p2.xcoord - pulley_rad, p2.ycoord,  Math.abs($('#k2spinner').spinner("value") * (p2.ycoord-o.ycoord))/2, DIRLEFT);
   drawArrowFBD(DIRDOWN, p2.xcoord + pulley_rad, p2.ycoord,  Math.abs($('#k2spinner').spinner("value") * (p2.ycoord-o.ycoord))/2, DIRRIGHT);	
-  drawArrowFBD(DIRUP, p2.xcoord , p2.ycoord,  Math.abs($('#k2spinner').spinner("value") * (p2.ycoord-o.ycoord)), DIRUP);
+  drawArrowFBD(DIRUP, p2.xcoord , p2.ycoord,  Math.abs($('#k2spinner').spinner("value") * (p2.ycoord-o.ycoord)), DIRRIGHT);
+
+  ctx.save();
+	ctx.lineWidth=1;
+	ctx.strokeStyle="#000000";
+	ctx.font = "10px Arial";
+	var body_length = 50;
+	ctx.strokeText('W', p2.xcoord - pulley_rad - 5, p2.ycoord + body_length + 10 );  
+	ctx.strokeText('W',  p2.xcoord + pulley_rad - 5, p2.ycoord + body_length + 10);  
+	ctx.strokeText('k2*x2', p2.xcoord - 10 ,  p2.ycoord - body_length - 10);  
+	ctx.restore();	
 
   //draw mass
   drawrect(center_rect, mass_width	, mass_width, 0, ctx, '#37474F', "#37474F", 1);
-  drawArrowFBD(DIRUP, center_rect.xcoord, center_rect.ycoord, $('#massSpinner').spinner("value") * 9.8, DIRUP);
-  drawArrowFBD(DIRDOWN, center_rect.xcoord, center_rect.ycoord, $('#massSpinner').spinner("value") * 9.8, DIRDOWN);
+  drawArrowFBD(DIRUP, center_rect.xcoord, center_rect.ycoord, $('#massSpinner').spinner("value") * (9.8 + calculateKEffective(k1,k2) * Math.abs(center_rect.ycoord - o.ycoord )), DIRRIGHT);
+  drawArrowFBD(DIRDOWN, center_rect.xcoord, center_rect.ycoord, $('#massSpinner').spinner("value") * (9.8 + calculateKEffective(k1,k2) * Math.abs(center_rect.ycoord - o.ycoord )), DIRRIGHT);
   //draw mass fbd
+
+
+  ctx.save();
+	ctx.lineWidth=1;
+	ctx.strokeStyle="#000000";
+	ctx.font = "10px Arial";
+	var body_length = 50;
+	ctx.strokeText('m*g', center_rect.xcoord- 5, center_rect.ycoord + body_length + 10 );  
+	ctx.strokeText('W', center_rect.xcoord - 10 ,  center_rect.ycoord - body_length - 10);  
+	ctx.restore();	
 }
 
 function drawArrowFBD(arrow_dir, start_x, start_y, value, value_pos){
