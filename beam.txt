@@ -1,0 +1,16 @@
+Beams
+1) Mention units in mm
+Units of E and I
+2) Cross section should be shown
+3) Material values of E standard E values. (Checkbox/dropdown in the lower right comment box with 3 different materials)
+4) Mention what is 'a'.  (Using double headed arrow to mark the dimension)
+5) Deflection at point of application (mark this
+2 decimal places)
+6) Units for sfd and bmd
+7) Refer vlab website cantilever vibration
+8) Indicate the value of support and force distance 
+9) Indicate deflection
+Mention the full length in the commentbox at the  bottom
+10) Cursor on button should show next  experiment
+
+

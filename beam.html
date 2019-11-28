@@ -221,14 +221,17 @@ function drawForFixed()
   ctx.closePath();
 
 
+
+
   ctx.beginPath();
   ctx.lineWidth=beamWidth;
   ctx.strokeStyle= "#000";
 
-  printcomment(",E = " + e +
-  				",I = " + i +
-  				",  deflection: " + calculatDeflectionForFixed(load_point, load, load_point)
-  				,0);
+  var ss4 = "4";
+  var ss2 = "2";
+  printcomment("E = " + e + " N/mm" + ss2.sup() +
+          ",I = " + i + "mm" + ss4.sup() +
+          ",  deflection at point force: " + parseFloat(calculatDeflectionForFixed(load_point, load, load_point).toFixed(2)) + " mm",0);
 
 
   var start = new point(x_offset+support_width/2, o.ycoord);
@@ -258,17 +261,40 @@ function drawForFixed()
   //draw force arrow
   drawForceArrow(ctx);
 
+  // dimension line  
+  var offset = 40;
+  var force_pos_x = $('#aspinner').spinner("value") + x_offset +support_width/2  ;    
+  ctx.save();
+  ctx.moveTo(x_offset+support_width/2 + 15, o.ycoord-offset);
+  ctx.lineWidth=1;
+  ctx.strokeStyle="#000000";
+  ctx.lineTo(force_pos_x,o.ycoord-offset);
+  ctx.moveTo(o.force_pos_x,o.ycoord-offset+5);
+  ctx.lineTo(o.force_pos_x,o.ycoord-offset-5);
+  ctx.moveTo(o.xcoord +support_width/2,o.ycoord-offset+5);
+  ctx.lineTo(o.xcoord +support_width/2,o.ycoord-offset-5);
+  ctx.stroke();
+  drawArrow(force_pos_x,o.ycoord-offset,ctx,180,15,30,'#000','',"#000");
+  drawArrow(o.xcoord +support_width/2 ,o.ycoord-offset,ctx,0,15,30,'#000','',"#000");
+
+  ctx.save();
+  ctx.lineWidth=1;
+  ctx.strokeStyle="#000000";
+  ctx.fillStyle = "#000"
+  ctx.font = "12px Arial";
+  ctx.strokeText('a', x_offset +support_width/2 + $('#aspinner').spinner("value")/2  , o.ycoord-offset - 5);  
+  ctx.restore();
+
+
   //draw SFD
   drawSfdforFixed(ctx, load, load_point);
-
   //draw BMD
   drawBmdforFixed(ctx, load, load_point);
-
   e /= 100;
   i /= 100; 
-
-
+  
 }
+
 function calculatDeflectionForFixed(load_point, load, x){
   
   if( x <= load_point ){
@@ -336,8 +362,8 @@ function drawSfdforFixed(ctx, load, load_point){
   ctx.lineWidth=1;
   ctx.strokeStyle="#000000";
   ctx.font = "10px Arial";
-  ctx.strokeText('' + Math.ceil(Ra), o.xcoord + support_width/2 - 20, o.ycoord - support_length/2 + 15);  
-  ctx.strokeText('' + Math.floor(Rb), o.xcoord + support_width/2 + beamLength + 10, o.ycoord  + 15)
+  ctx.strokeText('' + Math.ceil(Ra) + ' N', o.xcoord + support_width/2 - 30, o.ycoord - support_length/2 + 15);  
+  ctx.strokeText('' + Math.floor(Rb)+ ' N', o.xcoord + support_width/2 + beamLength + 10, o.ycoord  + 15)
   ctx.restore();
 
 	if(Ra > support_length/2)
@@ -412,8 +438,8 @@ function drawBmdforFixed(ctx, load, load_point){
   ctx.lineWidth=1;
   ctx.strokeStyle="#000000";
   ctx.font = "10px Arial";
-  ctx.strokeText('' + Math.ceil(calculateBmdforFixed(load, load_point, 0, beamLength)), o.xcoord + support_width/2 - 20, o.ycoord  + 15);  
-  ctx.strokeText('' + calculateBmdforFixed(load, load_point, 0, beamLength), o.xcoord + support_width/2 + beamLength + 10, o.ycoord  + 15)
+  ctx.strokeText('' + Math.ceil(calculateBmdforFixed(load, load_point, 0, beamLength)) + ' Nm', o.xcoord + support_width/2 - 40, o.ycoord  + 15);  
+  ctx.strokeText('' + Math.floor(calculateBmdforFixed(load, load_point, 0, beamLength)) + ' Nm', o.xcoord + support_width/2 + beamLength + 10, o.ycoord  + 15)
   ctx.restore();
 
 
@@ -476,10 +502,11 @@ function drawForCantilever()
   ctx.beginPath();
   ctx.lineWidth=beamWidth;
   ctx.strokeStyle= "#000";
-
-  printcomment(",E = " + e +
-  				",I = " + i +
-  				",  deflection: " + calculatDeflectionForCantilever(load_point, load, load_point)
+  var ss4 = "4";
+  var ss2 = "2";
+  printcomment("E = " + e + " N/mm" + ss2.sup() +
+  				",I = " + i + " mm" + ss4.sup() +
+  				",  deflection at point force: " + parseFloat(calculatDeflectionForCantilever(load_point, load, load_point).toFixed(2)) + " mm"
   				,0);
 
 
@@ -510,6 +537,31 @@ function drawForCantilever()
 
   //draw force arrow
   drawForceArrow(ctx);
+
+  // dimension line  
+  var offset = 40;
+  var force_pos_x = $('#aspinner').spinner("value") + x_offset +support_width/2  ;    
+  ctx.save();
+  ctx.moveTo(x_offset+support_width/2 + 15, o.ycoord-offset);
+  ctx.lineWidth=1;
+  ctx.strokeStyle="#000000";
+  ctx.lineTo(force_pos_x,o.ycoord-offset);
+  ctx.moveTo(force_pos_x,o.ycoord-offset+5);
+  ctx.lineTo(force_pos_x,o.ycoord-offset-5);
+  ctx.moveTo(o.xcoord +support_width/2,o.ycoord-offset+5);
+  ctx.lineTo(o.xcoord +support_width/2,o.ycoord-offset-5);
+  ctx.stroke();
+  drawArrow(force_pos_x,o.ycoord-offset,ctx,180,15,30,'#000','',"#000");
+  drawArrow(o.xcoord +support_width/2 ,o.ycoord-offset,ctx,0,15,30,'#000','',"#000");
+
+  ctx.save();
+  ctx.lineWidth=1;
+  ctx.strokeStyle="#000000";
+  ctx.fillStyle = "#000"
+  ctx.font = "12px Arial";
+  ctx.strokeText('a', x_offset +support_width/2 + $('#aspinner').spinner("value")/2  , o.ycoord-offset - 5);  
+  ctx.restore();
+
 
   //draw SFD
   drawSfdforCantilever(ctx, load, load_point);
@@ -595,7 +647,7 @@ function drawSfdforCantilever(ctx, load, load_point){
   ctx.lineWidth=1;
   ctx.strokeStyle="#000000";
   ctx.font = "10px Arial";
-  ctx.strokeText('' + Math.ceil(load), o.xcoord + support_width/2 - 20, o.ycoord - support_length/2 + 15);  
+  ctx.strokeText('' + Math.ceil(load) + ' N', o.xcoord + support_width/2 - 30, o.ycoord - support_length/2 + 15);  
   ctx.restore();
 
   pointtrans(o, new point(0,300));
@@ -655,7 +707,7 @@ function drawBmdforCantilever(ctx, load, load_point){
   ctx.lineWidth=1;
   ctx.strokeStyle="#000000";
   ctx.font = "10px Arial";
-  ctx.strokeText('' + 2000*Math.ceil(calculateBmdforCantilever(load, 0, load_point)), o.xcoord + support_width/2 - 50, o.ycoord  + 15);  
+  ctx.strokeText('' + 2000*Math.ceil(calculateBmdforCantilever(load, 0, load_point)) + ' Nm', o.xcoord + support_width/2 - 50, o.ycoord  + 15);  
   // ctx.strokeText('' + calculateBmdforSimplySupported(load, load_point, 0, beamLength), o.xcoord + support_width/2 + beamLength + 10, o.ycoord  + 15)
   ctx.restore();
 }
@@ -698,10 +750,12 @@ function drawForSimplySupported(){
   ctx.lineWidth=beamWidth;
   ctx.strokeStyle= "#000";
 
-  printcomment(",E = " + e +
-  				",I = " + i +
-  				",  deflection: " + calculatDeflectionForSimplySupported(load_point, load, load_point, wedgePosition)
-  				,0);
+  var ss4 = "4";
+  var ss2 = "2";
+  printcomment("E = " + e + " N/mm" + ss2.sup() +
+          ",I = " + i + "mm" + ss4.sup() +
+          ",  deflection at point force: " + parseFloat(calculatDeflectionForSimplySupported(load_point, load, load_point, wedgePosition)+ " mm"
+          ,0).toFixed(2))
 
   var start = new point(x_offset+support_width/2, o.ycoord);
   for(var x = 0; x < number_of_lines; x++){
@@ -773,6 +827,32 @@ function drawForSimplySupported(){
   support_width = 20;
   drawForceArrow(ctx);
 
+
+  // dimension line  
+  var offset = 40;
+  var force_pos_x = $('#aspinner').spinner("value") + x_offset +support_width/2  ;    
+  ctx.save();
+  ctx.moveTo(x_offset+support_width/2 + 15, o.ycoord-offset);
+  ctx.lineWidth=1;
+  ctx.strokeStyle="#000000";
+  ctx.lineTo(force_pos_x,o.ycoord-offset);
+  ctx.moveTo(o.force_pos_x,o.ycoord-offset+5);
+  ctx.lineTo(o.force_pos_x,o.ycoord-offset-5);
+  ctx.moveTo(o.xcoord +support_width/2,o.ycoord-offset+5);
+  ctx.lineTo(o.xcoord +support_width/2,o.ycoord-offset-5);
+  ctx.stroke();
+  drawArrow(force_pos_x,o.ycoord-offset,ctx,180,15,30,'#000','',"#000");
+  drawArrow(o.xcoord +support_width/2 ,o.ycoord-offset,ctx,0,15,30,'#000','',"#000");
+
+  ctx.save();
+  ctx.lineWidth=1;
+  ctx.strokeStyle="#000000";
+  ctx.fillStyle = "#000"
+  ctx.font = "12px Arial";
+  ctx.strokeText('a', x_offset +support_width/2 + $('#aspinner').spinner("value")/2  , o.ycoord-offset - 5);  
+  ctx.restore();
+
+
   //draw SFD
   drawSfdforSimplySupported(ctx, load, load_point);
 
@@ -799,6 +879,7 @@ function calculatDeflectionForSimplySupported(load_point, load, x, wedgePosition
       return -(load * (load_point - wedgePosition) * x * (pow(wedgePosition, 2) -  pow(x,2) )) / (6* e* i* wedgePosition);
     }
     else{
+      // return -load * pow(load_point - wedgePosition,2)*(load_point - wedgePosition - 3*x) / (6* e*i);
       return load*(x-wedgePosition)*(2*(load_point - wedgePosition)*wedgePosition + 3*(load_point - wedgePosition)*(x-wedgePosition) - pow(x-wedgePosition, 2)) / (6*e*i);
     }
   }
@@ -855,8 +936,8 @@ function drawSfdforSimplySupported(ctx, load, load_point){
     ctx.lineWidth=1;
     ctx.strokeStyle="#000000";
     ctx.font = "10px Arial";
-    ctx.strokeText('' + Math.ceil(Ra), o.xcoord + support_width/2 - 20, o.ycoord - support_length/2 + 15);  
-    ctx.strokeText('' + Math.floor(Rb), o.xcoord + support_width/2 + beamLength + 10, o.ycoord  + 15)
+    ctx.strokeText('' + Math.ceil(Ra) + ' N', o.xcoord + support_width/2 - 30, o.ycoord - support_length/2 + 15);  
+    ctx.strokeText('' + Math.floor(Rb) + ' N', o.xcoord + support_width/2 + beamLength + 10, o.ycoord  + 15)
     ctx.restore();
 
     if(Ra > support_length/2)
@@ -893,7 +974,7 @@ function drawSfdforSimplySupported(ctx, load, load_point){
     ctx.lineWidth=1;
     ctx.strokeStyle="#000000";
     ctx.font = "10px Arial";
-    ctx.strokeText('' + Math.ceil(Ra), o.xcoord + support_width/2 - 20, o.ycoord - support_length/2 + 15);  
+    ctx.strokeText('' + Math.ceil(Ra), o.xcoord + support_width/2 - 30, o.ycoord - support_length/2 + 15);  
     ctx.strokeText('' + Math.floor(Rb), o.xcoord + support_width/2 + beamLength + 10, o.ycoord  + 15)
     ctx.restore();
 
@@ -1003,7 +1084,7 @@ function drawBmdforSimplySupported(ctx, load, load_point){
   ctx.lineWidth=1;
   ctx.strokeStyle="#000000";
   ctx.font = "10px Arial";
-  ctx.strokeText('' + Math.ceil(calculateBmdforSimplySupported(load, load_point, load_point, beamLength)), o.xcoord + support_width/2 - 20, o.ycoord  - 5 + offset);  
+  ctx.strokeText('' + Math.ceil(calculateBmdforSimplySupported(load, load_point, load_point, beamLength)) + ' Nm', o.xcoord + support_width/2 - 30, o.ycoord  - 5 + offset);  
   // ctx.strokeText('' + calculateBmdforSimplySupported(load, load_point, 0, beamLength), o.xcoord + support_width/2 + beamLength + 10, o.ycoord  + 15)
   ctx.restore();
 }
@@ -1071,31 +1152,31 @@ function drawForceArrow(context){
   drawArrow(force_pos_x,arrow_bottom_tip_y,ctx,270,arrow_head_length,30,'#211b13','',"#211b13");
 }
 
-function changeScene(value){
-  scene = value;
-  if(value == FIXED_BEAM)
-    document.getElementById('simtitle').innerHTML = "Fixed Beam";
-  else if(value == CANTILEVER_BEAM)
-    document.getElementById('simtitle').innerHTML = 'Cantilever Beam';
-  else
-    document.getElementById('simtitle').innerHTML = 'Simply Supported Beam';
-}
+  function changeScene(value){
+    scene = value;
+    if(value == FIXED_BEAM)
+      document.getElementById('simtitle').innerHTML = "Fixed Beam";
+    else if(value == CANTILEVER_BEAM)
+      document.getElementById('simtitle').innerHTML = 'Cantilever Beam';
+    else
+      document.getElementById('simtitle').innerHTML = 'Simply Supported Beam';
+  }
 
-function changeSceneNext(){
-	if(scene == SIMPLY_SUPPORTED)
-		scene = FIXED_BEAM;
-	else
-		scene++;
-	changeScene(scene);
-}
+  function changeSceneNext(){
+  	if(scene == SIMPLY_SUPPORTED)
+  		scene = FIXED_BEAM;
+  	else
+  		scene++;
+  	changeScene(scene);
+  }
 
-function changeScenePrev(){
-	if(scene == FIXED_BEAM)
-		scene = SIMPLY_SUPPORTED;
-	else
-		scene--;
-	changeScene(scene);
-}
+  function changeScenePrev(){
+  	if(scene == FIXED_BEAM)
+  		scene = SIMPLY_SUPPORTED;
+  	else
+  		scene--;
+  	changeScene(scene);
+  }
 
 function drawrem(context)
 { 
@@ -1177,6 +1258,32 @@ function printcomment(commenttext,commentloc)
 
 </head>
 
+
+<style>
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+</style>
+
 <body onload="editcss(); startsim(); varinit();">
 
 <!-- DND-Verifying JavaScript is enabled in browser -->
@@ -1238,8 +1345,8 @@ repeat block with new variable name and new id for widgets-->
 <!-- Region for User controls of simulation -->
 <div id="controls">
 
-<img id="playpausebutton" onclick="changeScenePrev()" src="sins/bluebkdulls.png" />
-<img id="rotationbutton" onclick="changeSceneNext()" src="sins/bluefwddulls.png" />
+<img id="playpausebutton"  class="tooltip" onclick="changeScenePrev()" src="sins/bluebkdulls.png" ><span class="tooltiptext">Tooltip text</span></img>
+<img id="rotationbutton" onmouseover="bigImg(this)" onclick="changeSceneNext()" src="sins/bluefwddulls.png" />
 
 </div>
 
