@@ -320,11 +320,6 @@ omega2=$('#omega2spinner').spinner("value");
 R2=omega2/omega1;
 R1=omega1/omega2;
  k1=(-(1250*Math.PI*(R2+1))+Math.sqrt(1250*Math.PI*(R2+1)*1250*Math.PI*(R2+1)+4*358150*((Math.PI*Math.PI+4)*R2*R2+(Math.PI*Math.PI+4)+((2*Math.PI*Math.PI-8)*R2))))/(2*((Math.PI*Math.PI+4)*R2*R2+(Math.PI*Math.PI+4)+(2*Math.PI*Math.PI-8)*R2));
-// k2=-(1250*Math.PI*(R+1))-Math.sqrt((((1250*Math.PI*(R+1))*(1250*Math.PI*(R+1)))+(4*406625*((Math.PI*Math.PI+4)*R*R+(Math.PI*Math.PI+4)+(2*Math.PI*Math.PI-8)*R)))/(2*((Math.PI*Math.PI+4)*R*R+(Math.PI*Math.PI+4)+(2*Math.PI*Math.PI-8)*R)));
-// if(k1>0)
-//   r2=k1;
-// else
-//   r2=k2;
 r2=k1;
 r1=(omega2/omega1)*r2;
 rad1=100*r1/60;
@@ -391,7 +386,7 @@ r1=(Math.round(r1*100)-Math.round(r1)*100)/100+Math.round(r1);
 r2=(Math.round(r2*100)-Math.round(r2)*100)/100+Math.round(r2);
 rad1=(Math.round(rad1*100)-Math.round(rad1)*100)/100+Math.round(rad1);
 rad2=(Math.round(rad2*100)-Math.round(rad2)*100)/100+Math.round(rad2);
-printcomment("<b><u>Output:</u></b>\n r1=" +rad1+"mm ,   r2="+rad2+"mm ",1);
+printcomment("<b><u>Output:</u></b>\n r1=" +rad1+"mm  ,   r2="+rad2+"mm ",1);
 R1=(Math.round(R1*100)-Math.round(R1)*100)/100+Math.round(R1);
 printcomment("gear ratio is : " +R1,2);
 draw();
@@ -718,7 +713,7 @@ repeat block with new variable name and new id for widgets-->
 
 
 <div id = "omega2set" class="variable">
-<div class="varname"><p title='Input Angular Velocity'>&#969;2 (rad/s) </p>
+<div class="varname"><p title='Output Angular Velocity'>&#969;2 (rad/s) </p>
 <input id="omega2spinner"></input></div>
 <div id="omega2slider"></div>
 </div>
