@@ -68,11 +68,6 @@ var springx1 = pulley_offset_1;
 var springx2 = pulley_offset_2;
 
 
-const OSCILLATE = 0;
-const FBD = 1;
-
-var scene = OSCILLATE;
-
 //change simulation specific css content. e.g. padding on top of variable to adjust appearance in variables window
 function editcss()
 {
@@ -107,8 +102,6 @@ function varinit()
 
   $('#massSlider').slider("value", init_mass);  
   $('#massSpinner').spinner("value", init_mass);
-
-  printcomment("Note: The pulley is massless",0);
 
 }
 
@@ -165,12 +158,7 @@ var loop = function()
 
   o.xcoord=0;
   o.ycoord=0;
-
-  if(scene == OSCILLATE)
-    draw();
-  else 
-    drawFBD();
-  
+  draw()
 }
 
 
@@ -322,6 +310,8 @@ ctx.beginPath();
 
 
   //draw mass
+
+  
   drawrect(center_rect, mass_width	, mass_width, 0, ctx, '#37474F', "#37474F", 1);
 
 
@@ -337,6 +327,8 @@ ctx.beginPath();
 
 
   //top wall
+
+  
   ctx.beginPath();
   ctx.strokeStyle= "#000";
   ctx.lineWidth=floor_width;
@@ -362,77 +354,12 @@ ctx.beginPath();
   ctx.lineWidth=1;
   ctx.strokeStyle="#000000";
   ctx.font = "10px Arial";
-  ctx.strokeText('\u03A9 = ' + parseFloat(omega.toFixed(2)) + ' rad/s', o.xcoord + 120, o.ycoord + ceil_to_floor/2);  
+  ctx.strokeText('Omega: ' + parseFloat(omega.toFixed(4)) + ' rad/s', o.xcoord + 120, o.ycoord + ceil_to_floor/2);  
   ctx.restore();
 
 
 
-}
-
-
-function drawFBD(){
-
-	time += frameDelay;
-  canvas = document.getElementById("simscreen");
-  ctx = canvas.getContext("2d");
-  ctx.clearRect(0,0,550,400);  
-  
-
-  o.xcoord += 100;
-  o.ycoord += 200;
-
-  //all calculation
-  var max_x1 = 2*mass*9.8 / k1;
-  var max_x2 = 2*mass*9.8 / k2;
-  omega = Math.sqrt(calculateKEffective(k1, k2) / mass);
-
-
-  p1.xcoord = o.xcoord + floor_length/2 + pulley_rad ;
-  p1.ycoord = o.ycoord;
-
-  p2.xcoord = o.xcoord + floor_length/2 + pulley_rad + 100;
-  p2.ycoord = o.ycoord;
-
-  var center_rect = new point(p2.xcoord + pulley_rad + 100,p2.ycoord ,"");
-
-  //movement for the mass
-  center_rect.ycoord += 2*(max_x1+max_x2) * Math.cos( omega * time/1000)*50;
-  // printcomment("" + center_rect.ycoord,0);
-
-  //movement for the spring 1
-  p1.ycoord += -max_x1 * Math.cos( omega * time / 1000)*50;
-  // drawForceArrow(ctx, p1.xcoord - pulley_rad, p1.ycoord);
-
-  //movement for spring 2
-  p2.ycoord += max_x2 * Math.cos( omega * time / 1000)*50;
-
-  //pulley 1
-  drawPulley(ctx,p1.xcoord,p1.ycoord,pulley_rad);
-  //draw pulley 1 fbd
-
-  //pulley 2
-  drawPulley(ctx,p2.xcoord,p2.ycoord,pulley_rad);
-  //draw pulley 2 fbd
-
-  //draw mass
-  drawrect(center_rect, mass_width	, mass_width, 0, ctx, '#37474F', "#37474F", 1);
-  //draw mass fbd
-}
-
-
-// function drawForceArrow(context){
-//   //context.save();
-
-//   context.beginPath();
-//   context.lineWidth=arrow_line_width;
-//   context.strokeStyle="#211b13";
-//   context.moveTo(force_pos_x,arrow_bottom_tip_y - arrow_head_length);
-//   context.lineTo(force_pos_x,arrow_bottom_tip_y - arrow_head_length-arrow_line_length);
-//   context.stroke();
-//   context.closePath();
-  
-//   drawArrow(force_pos_x,arrow_bottom_tip_y,ctx,270,arrow_head_length,30,'#211b13','',"#211b13");
-// }
+};
 
 
 function calculateKEffective(k1,k2){
@@ -457,31 +384,6 @@ function drawPulley(ctx, x, y, rad){
 	ctx.stroke();
 	ctx.fill();
 	ctx.closePath();
-}
-
-
-function changeScene(value){
-  scene = value;
-  if(value == OSCILLATE)
-    document.getElementById('simtitle').innerHTML = "Two Pulley System";
-  else if(value == FBD)
-    document.getElementById('simtitle').innerHTML = 'Two Pulley System FBD';
-}
-
-function changeSceneNext(){
-	if(scene == FBD)
-		scene = OSCILLATE;
-	else
-		scene++;
-	changeScene(scene);
-}
-
-function changeScenePrev(){
-	if(scene == OSCILLATE)
-		scene = FBD;
-	else
-		scene--;
-	changeScene(scene);
 }
 
 
@@ -557,13 +459,13 @@ The simulation requires JavaScript to be enabled.
 repeat block with new variable name and new id for widgets-->
 
 <div class="variable">
-<div class="varname"><p title="Link Length">k1 (N/m)</p>
+<div class="varname"><p title="Link Length">k1 (cm)</p>
 <input id="k1spinner"></input></div>
 <div id="k1slider"></div>
 </div>
 
 <div id = "theta2set" class="variable">
-<div class="varname"><p title='Input Angle'>k2 (N/m) </p>
+<div class="varname"><p title='Input Angle'>k2 (cm) </p>
 <input id="k2spinner"></input></div>
 <div id="k2slider"></div>
 </div>
@@ -579,13 +481,10 @@ repeat block with new variable name and new id for widgets-->
 <div id="ctrltitle">CONTROLS</div>
 
 <!-- Region for User controls of simulation -->
-
 <div id="controls">
 
-<img id="playpausebutton" onclick="changeScenePrev()" src="sins/bluebkdulls.png" />
-<img id="rotationbutton" onclick="changeSceneNext()" src="sins/bluefwddulls.png" />
-
-</div>
+<!-- <img id="playpausebutton" onclick="simstate()" src="sins/bluebkdulls.png" /> -->
+<!-- <img id="rotationbutton" onclick="Reset()" src="sins/bluefwddulls.png" /> -->
 
 </div>
 
