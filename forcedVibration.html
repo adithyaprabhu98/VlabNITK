@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>SOLVE - Mechanics of Machines Lab - Four Bar Mechanism</title>
+<title>SOLVE - Dynamics of Machines Lab - Rotating Unbalance</title>
 
 <!-- DND-Required css and js files -->
 <link rel="stylesheet" href="sins/MOMstyle.css" />
@@ -308,21 +308,20 @@ function varinit()
 {
 varchange();    
 //Variable r1 slider and number input types
-$('#r1slider').slider("value", 80); 
-$('#r1spinner').spinner("value", 80);
+$('#r1slider').slider("value", 100); 
+$('#r1spinner').spinner("value", 100);
 //Variable r2 slider and number input types
 $('#r2slider').slider("value", 60); 
 $('#r2spinner').spinner("value", 60);
 //Variable r3 slider and number input types
-$('#r3slider').slider("value", 80); 
-$('#r3spinner').spinner("value", 80);
+$('#r3slider').slider("value", 0.5); 
+$('#r3spinner').spinner("value", 0.5);
 //Variable r4 slider and number input types
-$('#r4slider').slider("value", 60); 
-$('#r4spinner').spinner("value", 60);
+$('#r4slider').slider("value", 10); 
+$('#r4spinner').spinner("value",10);
 
-
-  $('#r5slider').slider("value", 60);
-  $('#r5spinner').spinner("value", 60);
+$('#r5slider').slider("value", 60);
+$('#r5spinner').spinner("value", 60);
 //Variable theta2 slider and number input types
 $('#theta2slider').slider("value", 40); 
 $('#theta2spinner').spinner("value", 40);
@@ -354,8 +353,8 @@ $( "#r2spinner" ).on( "spin", function( e, ui ) { $('#r2slider').slider("value",
 $( "#r2spinner" ).on( "change", function() {  varchange() } );
 
 //Variable r1 slider and number input types
-$('#r3slider').slider({ max : 1, min : 0, step : 0.05 });    // slider initialisation : jQuery widget
-$('#r3spinner').spinner({ max : 1, min : 0, step : 0.05 });    // number initialisation : jQuery widget      
+$('#r3slider').slider({ max : 1, min : 0, step : 0.01 });    // slider initialisation : jQuery widget
+$('#r3spinner').spinner({ max : 1, min : 0, step : 0.01 });    // number initialisation : jQuery widget      
 // monitoring change in value and connecting slider and number
 // setting trace point coordinate arrays to empty on change of link length
 $( "#r3slider" ).on( "slide", function( e, ui ) { $('#r3spinner').spinner("value",ui.value); ptx=[]; pty=[]; } );
@@ -1123,7 +1122,7 @@ function drawForpage2()
   var chart = new CanvasJS.Chart("chartContainer", {
   
   title:{
-    text: "graph1"
+    //text: "graph1"
   },
   axisX: {
     title:"n",
@@ -1151,6 +1150,7 @@ function drawForpage2()
       { x: 8, y: MF_arr[8]  },
       { x: 9, y: MF_arr[9]  },
       { x: 10, y: MF_arr[10]}
+      //{ x: n, y: n*n/Math.sqrt(((1-n*n)* (1 - n * n))+(2*z*n)* (2 * z * n))}
     ]
   }]
 });
@@ -1178,7 +1178,7 @@ function drawForpage3()
   var chart1 = new CanvasJS.Chart("chartContainer", {
   
   title:{
-    text: "graph2"
+    //text: "graph2"
   },
   axisX: {
     title:"n",
@@ -1345,7 +1345,7 @@ send an email to adityaraman09@gmail.com for any communication
 <div id="container">
 
 <!-- Replace TITLE with simulation title to be displayed next to logo-->
-<div id="simtitle">Forced Vibration</div>
+<div id="simtitle">Rotating Unbalance Forced Vibration</div>
 
 <!-- Region for simulation display -->
 <canvas id="simscreen" height="400px" width="550px"></canvas>
