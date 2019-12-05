@@ -1025,12 +1025,12 @@ pointjoin(c,d,ctx,"#005500",1);
   ctx.strokeStyle = "#000000";
 
   ctx.beginPath();
-  ctx.moveTo(d6.xcoord + 60, d6.ycoord);
-  ctx.lineTo(d6.xcoord + 60, d6.ycoord + 50);
-  ctx.lineTo(d6.xcoord + 50, d6.ycoord + 50);
-  ctx.lineTo(d6.xcoord + 70, d6.ycoord + 50);
-  ctx.lineTo(d6.xcoord + 60, d6.ycoord + 50);
-  ctx.lineTo(d6.xcoord + 60, d6.ycoord -10);
+  ctx.moveTo(d7.xcoord + 60, d7.ycoord);
+  ctx.lineTo(d7.xcoord + 60, d7.ycoord + 50);
+  ctx.lineTo(d7.xcoord + 50, d7.ycoord + 50);
+  ctx.lineTo(d7.xcoord + 70, d7.ycoord + 50);
+  ctx.lineTo(d7.xcoord + 60, d7.ycoord + 50);
+  ctx.lineTo(d7.xcoord + 60, d7.ycoord);
 
 
   ctx.closePath();
@@ -1132,10 +1132,12 @@ function drawForpage2()
   },
   axisY:{
     title: "Magnification Factor",
+    minimum: 0,
+    maximum: 20
     
   },
   data: [{
-    type: "scatter",
+    type: "line",
     toolTipContent: "<b>Magnification Factor: </b>{x}<br/><b>: </b>{y}",
     dataPoints: [
       { x: 0, y: MF_arr[0] },
@@ -1148,7 +1150,7 @@ function drawForpage2()
       { x: 7, y: MF_arr[7]  },
       { x: 8, y: MF_arr[8]  },
       { x: 9, y: MF_arr[9]  },
-      { x: 10, y: MF_arr[10]  }
+      { x: 10, y: MF_arr[10]}
     ]
   }]
 });
