@@ -19,6 +19,7 @@
 
 //program variables
 //controls section
+var enabled_img=true;
 var simstatus=0; 
 var rotstatus=1;
 var phi=0;
@@ -27,8 +28,12 @@ var commenttext="Some Text";
 var commentloc=0;
 //computing section
 var trans= new point(100,150);
+var j=100;
 var cross= new point(375,150);
 var a= new point(0,0,"A");
+var graph_p1=new point(0,0,"");
+var graph_p2= new point(0,0,"");
+var rot=new point(0,0,"");
 var a1= new point(0,0,"A");
 var a3= new point(0,0,"A");
 var b= new point(0,0,"o");
@@ -187,6 +192,11 @@ var temp=0;
   var n = 0;
   var z = 0;
   var w;
+  var w_not;
+  var k_not;
+  var m_not;
+  var z_not;
+  var F_not;
   const page1=0;
   const page2=1;
   const page3=2;
@@ -484,6 +494,7 @@ n = w / Wn;
 //x1=(m/k)*(Math.sin(w*t));
 //phi = atan((2*z*n)/(1-n*n));
 x1=((F*n*n)/Math.sqrt(((1-n*n)* (1 - n * n))+(2*z*n)* (2 * z * n))*(Math.sin(w*t)));
+
 //n*n/Math.sqrt(((1-n*n)* (1 - n * n))+(2*z*n)* (2 * z * n))
 
 }
@@ -517,6 +528,7 @@ ka=k-r2*(r1-r4)*Math.cos(rad(theta2))-r4*r1;
 kb=-2*r2*r4*Math.sin(rad(theta2));
 kc=k-r2*(r1+r4)*Math.cos(rad(theta2))+r4*r1;
 det=kb*kb-4*ka*kc;*/
+
 a.xcoord=80;
 a.ycoord=-60-x1;
 c.xcoord=180;
@@ -721,6 +733,7 @@ a48.ycoord=-180;
   b2.ycoord=a2.ycoord+(r2*Math.sin(rad(theta2)))    dispTables();*/
   n = w/Wn;
   MF = (n * n) /Math.sqrt(((1-n*n)* (1 - n * n))+(2*z*n))* (2 * z * n);
+
 printcomment("Natural Frequency= "+roundd(Wn,2)+"rad/s "+" , Frequency Ratio = "+roundd(n,2)+" , Magnification Factor= "+roundd(MF,2) ,1);
 
 //dispTables();
@@ -845,7 +858,28 @@ $('#datatable2').show();
 
 
   document.getElementById('titleincanvas').innerHTML=" ";
-drawrect(a,125,30,0,ctx,"#005500","#005500",0);
+  var mass1=20+(m-10)/29.5;
+drawrect(a,125,mass1,0,ctx,"#005500","#005500",0);
+  graph_p1.xcoord=420;
+  graph_p1.ycoord=210;
+  graph_p2.ycoord=210;
+  graph_p2.xcoord=280;
+  drawrect(graph_p1,300,1,0,ctx,"#005500","#005500",0);
+  ctx.lineWidth=2;
+  ctx.strokeStyle="#000000";
+  ctx.strokeText('t', graph_p1.xcoord+120,graph_p1.ycoord+20);
+  ctx.strokeText('d', graph_p2.xcoord-15,graph_p2.ycoord-70);
+  drawrect(graph_p2,1,200,0,ctx,"#005500","#005500",0);
+  ctx.beginPath();
+  ctx.fillStyle = '#FFFFFF';
+  ctx.strokeStyle='#666666';
+  ctx.arc(a.xcoord,a.ycoord,mass1/2,2*Math.PI,0);
+  ctx.fill();
+  ctx.stroke();
+  rot.xcoord=a.xcoord+(mass1/2-4);
+  rot.ycoord=a.ycoord;
+  pointdisp(rot,ctx,3,"#000000","#000000",'','','');
+  ctx.closePath();
 // drawrect(a1,50,30,0,ctx,"#005500","#005500",0);
 //pointjoin(c,d,ctx,"#005500",1);
   //pointjoin(a,b,ctx,"#0066FF");
@@ -1084,6 +1118,20 @@ $('#datatable2').show();
   ptx=[];
   pty=[];
   }*/
+
+  if(w_not!=w || k_not!=k || z_not!=z || F_not!=F || m_not!=m)
+  {
+    j=100;
+  }
+  ptx.push(a.xcoord+j);
+  pty.push(a.ycoord);
+  j=j+1;
+  plot_graph(ptx,pty,ctx);
+  w_not=w;
+  F_not=F;
+  z_not=z;
+  m_not=m;
+  k_not=k;
 }
 //function to check whether links satisfy grashof condition
 /*function checkGrashof()
@@ -1111,50 +1159,60 @@ $('#datatable2').show();
 }*/
 function drawForpage2()
 {
-  var MF_arr=[]
-  for(i=0;i<11;i++){
+  var MF_arr=[];
+  for(i=0;i<110;i++){
     j=i;
     MF_arr[i]=j*j/Math.sqrt(((1-j*j)* (1 - j * j))+(2*z*j)* (2 * z * j));
   }
-
   canvas = document.getElementById("simscreen");
   ctx = canvas.getContext("2d");
   ctx.clearRect(0,0,550,400); 
+  var dps = [];
   var chart = new CanvasJS.Chart("chartContainer", {
   
   title:{
-    text: "graph1"
+    text: ""
   },
   axisX: {
     title:"n",
-    minimum: 0,
-    maximum: 11
   },
   axisY:{
     title: "Magnification Factor",
     
   },
-  data: [{
-    type: "scatter",
-    toolTipContent: "<b>Magnification Factor: </b>{x}<br/><b>: </b>{y}",
-    dataPoints: [
-      { x: 0, y: MF_arr[0] },
-      { x: 1, y: MF_arr[1]  },
-      { x: 2, y: MF_arr[2]  },
-      { x: 3, y: MF_arr[3]  },
-      { x: 4, y: MF_arr[4]  },
-      { x: 5, y: MF_arr[5]  },
-      { x: 6, y: MF_arr[6]  },
-      { x: 7, y: MF_arr[7]  },
-      { x: 8, y: MF_arr[8]  },
-      { x: 9, y: MF_arr[9]  },
-      { x: 10, y: MF_arr[10]  }
-    ]
-  }]
-});
-chart.render();
-
  
+  data: [{
+    type: "spline",
+    name: "Magnification Factor",
+    markerSize: 0,
+    toolTipContent: "<b>Magnification Factor: </b>{x}<br/><b>: </b>{y}",
+    dataPoints: dps
+  }
+  ]
+});
+  var xVal=0;
+  var yVal=0;
+  var updateInterval = 1000;
+  var dataLength = 50;
+  var updateChart = function (count) {
+  count = count || 1;
+  // count is number of times loop runs to generate random dataPoints.
+  for (var j = 0; j < count; j++) { 
+    yVal = j*j/Math.sqrt(((1-j*j)* (1 - j * j))+(2*z*j)* (2 * z * j));
+    dps.push({
+      x: xVal,
+      y: yVal
+    });
+    xVal++;
+  }
+  
+  chart.render();
+};
+
+updateChart(dataLength); 
+ 
+chart.render();
+enabled_img=true;
  
  
 
@@ -1162,52 +1220,56 @@ chart.render();
 }
 function drawForpage3()
 { 
-  var phi_arr=[]
-  for(i=0;i<11;i++){
-    j=i*10;
-    phi_arr[i]=atan((2*z*j)/(1-j*j));
-  }
+  
 
   canvas = document.getElementById("simscreen");
   ctx = canvas.getContext("2d");
   ctx.clearRect(0,0,550,400); 
-  var mc=document.getElementById("chartContainer").getContext("2d");
-  mc.destroy();
-  var chart1 = new CanvasJS.Chart("chartContainer", {
+  var dps_2 = [];
+  var chart = new CanvasJS.Chart("chartContainer", {
   
   title:{
-    text: "graph2"
+    text: ""
   },
   axisX: {
     title:"n",
-    minimum: 0,
-    maximum: 100
+
   },
   axisY:{
     title: "Phase Angle",
     
   },
   data: [{
-    type: "scatter",
+    type: "line",
     toolTipContent: "<b>Phase Angle: </b>{x}<br/><b>: </b>{y}",
-    dataPoints: [
-      { x: 0, y: phi_arr[0] },
-      { x: 10, y: phi_arr[1]  },
-      { x: 20, y: phi_arr[2]  },
-      { x: 30, y: phi_arr[3]  },
-      { x: 40, y: phi_arr[4]  },
-      { x: 50, y: phi_arr[5]  },
-      { x: 60, y: phi_arr[6]  },
-      { x: 70, y: phi_arr[7]  },
-      { x: 80, y: phi_arr[8]  },
-      { x: 90, y: phi_arr[9]  },
-      { x: 100, y: phi_arr[10]  }
-    ]
+    dataPoints: dps_2
   }]
-});
-chart1.render();
+}); 
 
- 
+  var xVal=0;
+  var yVal=0;
+  var updateInterval = 1000;
+  var dataLength = 50;
+  var updateChart = function (count) {
+  count = count || 1;
+  // count is number of times loop runs to generate random dataPoints.
+  for (var j = 0; j < count; j++) { 
+    yVal = Math.atan((2*z*j)/(1-j*j));
+    dps_2.push({
+      x: xVal,
+      y: yVal
+    });
+    xVal++;
+  }
+  
+  chart.render();
+};
+
+updateChart(dataLength); 
+chart.render();
+chart.update();
+
+ enabled_img=false;
  
  
 
@@ -1249,11 +1311,13 @@ function changeScene(value){
   if(value == page1)
     document.getElementById('simtitle').innerHTML = "Forced Vibration";
   else if (value == page2)
-    document.getElementById('simtitle').innerHTML = 'Graph1';
+    document.getElementById('simtitle').innerHTML = 'Magnification Factor Graph';
   else
-    document.getElementById('simtitle').innerHTML = 'Graph2';
+    document.getElementById('simtitle').innerHTML = 'Phase Angle Graph';
 }
 function changeSceneNext(){
+  if(enabled_img == true)
+  {
   if(scene == page3){ 
     scene = page3;
   }
@@ -1262,6 +1326,7 @@ function changeSceneNext(){
     scene++; 
   }
   changeScene(scene);
+}
 }
 
 // function changeScenePrev(){
@@ -1352,6 +1417,8 @@ send an email to adityaraman09@gmail.com for any communication
 <div id="datatable1" class="datatable"></div>
 <div id="datatable2" class="datatable"></div>
 <div id="chartContainer" style="position: relative; left: 50px; top: 100px; style=height:400px; width: 60%;"></div>
+<div id="chartContainer2" style="position: relative; left: 50px; top: 100px; style=height:400px; width: 60%;"></div>
+
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 <!-- Equation Reference and Legend for Graphs etc 
