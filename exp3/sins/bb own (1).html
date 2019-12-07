@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+        <meta charset="UTF-8">
+        <title>SOLVE - Mechanics of Machines Lab - Block Brake</title>
+        <link rel="stylesheet" href="sins/MOMstyle.css" />
+        <!-- <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script> -->
+        <!-- <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js'></script> -->
+        <script type="text/javascript" src= "sins/jquery.min.js"></script>
+        <script type="text/javascript" src= "sins/jquery-ui.min.js"></script>
+        <script type="text/javascript" src= "sins/MOMscript.js"></script>
+        <script src="sins/graph.ob.js"></script> 
+        <script src="sins/graph_use.ob.js"></script>
+        <script src="sins/graph_use2.ob.js"></script>
+        <link href="sins/mathstyle.css" rel="stylesheet" /><!--Stylesheet to display Math functions -->
+  </head>
+
+<body onload="editcss();  startsim(); varinit();printcomment();acceleration();rot_time();">
+
+  <noscript>
+    The simulation requires JavaScript to be enabled.
+</noscript>
+
+<script type="text/javascript" >
+    //Script specific to simulation
+    
+    //program variables
+    //controls section
+    var simstatus=0; 
+    var rotstatus=1;
+    //comments section
+    var commenttext="Some Text";
+    var commentloc=0;
+    //computing section
+    var trans= new point(150,200);   //brake location
+    var cross= new point(375,150);   //graph location
+    var a1= new point(0,0,"");       //lenght of block lever
+    var b1= new point(0,0,"");        //distance of shoe centre from pivot
+    var j= new point(0,0,"");         //point at curve in the brake lever
+    var c1= new point(0,0,"");        //parallel distance of point of contact of disk from pivot
+    var f= new point(0,0,"");        //point of pivot
+    var r1= new point(0,0,"");       //origin of disk
+    var pc= new point(0,0,"");        //point of contact of disk
+    var z1 = new point(0,0,"");	      //radial rod endpoints of the disk
+	  var z2 = new point(0,0,"");       //radial rod endpoints of the disk
+	  var z3 = new point(0,0,"");       //radial rod endpoints of the disk
+    var z4 = new point(0,0,"");       //radial rod endpoints of the disk
+
+    
+    var a= 80, b=40, c=10, r=20, mi=0.38, k=0;
+    var theta2 = 50;//(2*(&thetha;)// all angles to be defined either in degrees only or radians only throughout the program and convert as and when required
+    var theta3=20; // All angles in Degrees. (mention the specification in the script like here) 
+    var theta_rod=0;
+    var rpm=1; // angular velocity in rotation per minute.
+    var omega=1;
+    //coordinates for disk radial points 
+    var x1=0;
+    var y1=0;
+	  var x2=0;
+    var y2=0;
+    
+    //for moment of inertia
+   var I=0;
+   var t=0; //torque
+   var ti=0;  //total time to stop the rotation
+   var acce=0;
+   var flaggrashof=true, firstrun=true;
+    //graphics section
+    var canvas;
+    var ctx ;
+    //timing section
+    var simTimeId = setInterval("",'1000');
+    var pauseTime = setInterval("",'1000');
+    var time=0;
+    //point tracing section
+    var ptx = [];
+    var pty = [];
+    var datapoints1 = []; //for graph points
+    
+    //change simulation specific css content. e.g. padding on top of variable to adjust appearance in variables window
+    function editcss()
+    {
+    $('.variable').css('padding-top','1.5px');
+ 
+    }
+    
+    //start of simulation here; starts the timer with increments of 0.1 seconds
+    function startsim()
+    {
+    simTimeId=setInterval("time=time+0.1; varupdate(); ",'100');
+    }
+    
+    // switches state of simulation between 0:Playing & 1:Paused
+    function simstate()
+    {
+      var imgfilename=document.getElementById('playpausebutton').src;
+      imgfilename = imgfilename.substring(imgfilename.lastIndexOf('/') + 1, imgfilename.lastIndexOf('.'));
+      if (imgfilename=="bluepausedull")
+      {
+        document.getElementById('playpausebutton').src="sins/blueplaydull.png";
+         clearInterval(simTimeId);
+        simstatus=1;
+        $('#theta2spinner').spinner("value",theta2);			//to set simulation parameters on pause
+        pauseTime=setInterval("varupdate();",'100');
+      }
+        if (imgfilename=="blueplaydull")
+      {
+           time=0;			
+           clearInterval(pauseTime);
+        document.getElementById('playpausebutton').src="sins/bluepausedull.png";
+        simTimeId=setInterval("time=time+0.1; varupdate(); ",'100');    
+        simstatus=0;
+      } 
+    }
+    
+    // switches state of rotation between 1:CounterClockWise & -1:Clockwise
+    function rotstate()
+    {
+      var imgfilename=document.getElementById('rotationbutton').src;
+      imgfilename = imgfilename.substring(imgfilename.lastIndexOf('/') + 1, imgfilename.lastIndexOf('.'));
+      if (imgfilename=="bluecwdull")
+      {
+        document.getElementById('rotationbutton').src="sins/blueccwdull.png";
+        rotstatus=-1;
+      }
+        if (imgfilename=="blueccwdull")
+      {
+        document.getElementById('rotationbutton').src="sins/bluecwdull.png";
+        rotstatus=1;
+      } 
+    }
+    
+    //Initialise system parameters here
+    function varinit()
+    {
+    varchange();		
+    //Variable r1 slider and number input types
+    $('#aslider').slider("value", 130);	
+    $('#aspinner').spinner("value", 130);
+    //Variable r2 slider and number input types
+    $('#bslider').slider("value", 60);	
+    $('#bspinner').spinner("value", 60);
+    //Variable r3 slider and number input types
+    $('#cslider').slider("value", 10);	
+    $('#cspinner').spinner("value", 10);
+    //Variable r3 slider and number input types
+    $('#Pslider').slider("value", 80);	
+    $('#Pspinner').spinner("value", 80);
+    //Variable r4 slider and number input types
+    $('#raslider').slider("value", 30);	
+    $('#raspinner').spinner("value", 30);
+    //Variable friction coefficient slider and number input types
+    $('#mslider').slider("value", 0.39);	
+    $('#mspinner').spinner("value", 0.39);
+    //Variable theta2 slider and number input types
+    $('#theta2slider').slider("value", 60);
+    $('#theta2spinner').spinner("value", 60);
+    //Variable omega2 slider and number input types
+    $('#rpmslider').slider("value", 3);	
+    $('#rpmspinner').spinner("value", 3);
+    }
+    
+    // Initialise and Monitor variable containing user inputs of system parameters.
+    //change #id and repeat block for new variable. Make sure new <div> with appropriate #id is included in the markup
+    function varchange()
+    {
+    //Variable a slider and number input types
+    $('#aslider').slider({ max : 150, min : 20, step : 2 });		// slider initialisation : jQuery widget
+    $('#aspinner').spinner({ max : 150, min : 20, step : 2 });		// number initialisation : jQuery widget			
+    // monitoring change in value and connecting slider and number
+    // setting trace point coordinate arrays to empty on change of link length
+    $( "#aslider" ).on( "slide", function( e, ui ) { $('#aspinner').spinner("value",ui.value); ptx=[]; pty=[]; } );
+    $( "#aspinner" ).on( "spin", function( e, ui ) { $('#aslider').slider("value",ui.value); ptx=[]; pty=[]; } );
+    $( "#aspinner" ).on( "change", function() {  varchange() } );
+    
+    //Variable b slider and number input types
+    $('#bslider').slider({ max : a, min : r+5, step : 2 });		// slider initialisation : jQuery widget
+    $('#bspinner').spinner({ max : a, min : r+5, step : 2 });		// number initialisation : jQuery widget			
+    // monitoring change in value and connecting slider and number
+    // setting trace point coordinate arrays to empty on change of link length
+    $( "#bslider" ).on( "slide", function( e, ui ) { $('#bspinner').spinner("value",ui.value); ptx=[]; pty=[]; r2changed();} );
+    $( "#bspinner" ).on( "spin", function( e, ui ) { $('#bslider').slider("value",ui.value); ptx=[]; pty=[]; r2changed();} );
+    $( "#bspinner" ).on( "change", function() {  varchange() } );
+    
+    //Variable c slider and number input types
+    $('#cslider').slider({ max : 50, min : -50, step : 2 });		// slider initialisation : jQuery widget
+    $('#cspinner').spinner({ max : 50, min :-50, step : 2 });		// number initialisation : jQuery widget			
+    // monitoring change in value and connecting slider and number
+    // setting trace point coordinate arrays to empty on change of link length
+    $( "#cslider" ).on( "slide", function( e, ui ) { $('#cspinner').spinner("value",ui.value); ptx=[]; pty=[]; } );
+    $( "#cspinner" ).on( "spin", function( e, ui ) { $('#cslider').slider("value",ui.value); ptx=[]; pty=[]; } );
+    $( "#cspinner" ).on( "change", function() {  varchange() } );
+
+     //Variable fricton coefficient slider and number input types
+     $('#mslider').slider({ max : 0.42, min : 0.35, step : 0.01 });		// slider initialisation : jQuery widget
+    $('#mspinner').spinner({ max :0.42, min :0.35, step : 0.01 });		// number initialisation : jQuery widget			
+    // monitoring change in value and connecting slider and number
+    // setting trace point coordinate arrays to empty on change of link length
+    $( "#mslider" ).on( "slide", function( e, ui ) { $('#mspinner').spinner("value",ui.value); ptx=[]; pty=[]; } );
+    $( "#mspinner" ).on( "spin", function( e, ui ) { $('#mslider').slider("value",ui.value); ptx=[]; pty=[]; } );
+    $( "#mspinner" ).on( "change", function() {  varchange() } );
+    
+    //Variable P slider and number input types
+    $('#Pslider').slider({ max : 1000, min : 0, step : 20 });		// slider initialisation : jQuery widget
+    $('#Pspinner').spinner({ max : 1000, min : 0, step :20  });		// number initialisation : jQuery widget			
+    // monitoring change in value and connecting slider and number
+    // setting trace point coordinate arrays to empty on change of link length
+    $( "#Pslider" ).on( "slide", function( e, ui ) { $('#Pspinner').spinner("value",ui.value); ptx=[]; pty=[]; } );
+    $( "#Pspinner" ).on( "spin", function( e, ui ) { $('#Pslider').slider("value",ui.value); ptx=[]; pty=[]; } );
+    $( "#Pspinner" ).on( "change", function() {  varchange() } );
+
+    //Variable radius slider and number input types
+    $('#raslider').slider({ max : 40, min : 15, step : 2 });		// slider initialisation : jQuery widget
+    $('#raspinner').spinner({ max : 40, min : 15, step : 2 });		// number initialisation : jQuery widget			
+    // monitoring change in value and connecting slider and number
+    // setting trace point coordinate arrays to empty on change of link length
+    $( "#raslider" ).on( "slide", function( e, ui ) { $('#raspinner').spinner("value",ui.value); ptx=[]; pty=[]; } );
+    $( "#raspinner" ).on( "spin", function( e, ui ) { $('#raslider').slider("value",ui.value); ptx=[]; pty=[]; } );
+    $( "#raspinner" ).on( "change", function() {  varchange() } );
+        
+    //Variable theta2 slider and number input types
+    $('#theta2slider').slider({ max : 179, min : 10, step : 1 });		// slider initialisation : jQuery widget
+    $('#theta2spinner').spinner({ max : 179, min : 10, step : 1 });		// number initialisation : jQuery widget			
+    // monitoring change in value and connecting slider and number
+    // setting trace point coordinate arrays to empty on change of link length
+    $( "#theta2slider" ).on( "slide", function( e, ui ) { $('#theta2spinner').spinner("value",ui.value); ptx=[]; pty=[]; } );
+    $( "#theta2spinner" ).on( "spin", function( e, ui ) { $('#theta2slider').slider("value",ui.value); ptx=[]; pty=[]; } );
+    $( "#theta2spinner" ).on( "change", function() {  varchange() } );
+    
+    //Variable RPM slider and number input types
+    $('#rpmslider').slider({ max : 20, min : 0, step : 1});		// slider initialisation : jQuery widget
+    $('#rpmspinner').spinner({ max : 20, min : 0, step : 1 });		// number initialisation : jQuery widget			
+    // monitoring change in value and connecting slider and number
+    // setting trace point coordinate arrays to empty on change of link length
+    $( "#rpmslider" ).on( "slide", function( e, ui ) { $('#rpmspinner').spinner("value",ui.value); ptx=[]; pty=[]; } );
+    $( "#rpmspinner" ).on( "spin", function( e, ui ) { $('#rpmslider').slider("value",ui.value); ptx=[]; pty=[]; } );
+    $( "#rpmspinner" ).on( "change", function() {  varchange() } );
+    
+    varupdate();
+    
+    }
+    //Computing of various system parameters
+  
+    function varupdate()
+    {
+    
+    $('#aslider').slider("value", $('#aspinner').spinner('value'));  //updating slider location with change in spinner(debug)
+    $('#bslider').slider("value", $('#bspinner').spinner('value'));
+    $('#cslider').slider("value", $('#cspinner').spinner('value'));
+    $('#Pslider').slider("value", $('#Pspinner').spinner('value'));
+    $('#raslider').slider("value", $('#raspinner').spinner('value'));
+    $('#mslider').slider("value", $('#mspinner').spinner('value'));
+    $('#theta2slider').slider("value", $('#theta2spinner').spinner('value')); 
+    $('#rpmslider').slider("value", $('#rpmspinner').spinner('value')); 
+    a=$('#aspinner').spinner("value");
+    b=$('#bspinner').spinner("value");
+    c=$('#cspinner').spinner("value");
+    r=$('#raspinner').spinner("value");
+    mi=$('#mspinner').spinner("value");
+    rpm=$('#rpmspinner').spinner("value");
+    P=$('#Pspinner').spinner("value");
+    theta2=$('#theta2spinner').spinner("value");
+
+
+    if(!simstatus)
+    {   
+    $('#aspinner').spinner("disable");
+    $('#bspinner').spinner("disable");
+    $('#cspinner').spinner("disable");
+    $('#raspinner').spinner("disable");
+    $('#rpmspinner').spinner("disable");
+    $('#mspinner').spinner("disable");
+    $('#Pspinner').spinner("disable");
+    $('#theta2spinner').spinner("disable");
+    $('#aslider').slider("disable");
+    $('#bslider').slider("disable");
+    $('#cslider').slider("disable");
+    $('#mslider').slider("disable");
+    $('#raslider').slider("disable");
+    $('#Pslider').slider("disable");
+    $('#rpmslider').slider("disable");
+    $('#theta2slider').slider("disable");
+    //printcomment
+    }
+
+    if(simstatus)
+    { 
+    $('#aspinner').spinner("enable");
+    $('#bspinner').spinner("enable");
+    $('#cspinner').spinner("enable");
+    $('#raspinner').spinner("enable");
+    $('#mspinner').spinner("enable");
+    $('#theta2spinner').spinner("enable");6
+    $('#rpmspinner').spinner("enable");
+    $('#Pspinner').spinner("enable");
+    $('#aslider').slider("enable");
+    $('#bslider').slider("enable");
+    $('#cslider').slider("enable");
+    $('#mslider').slider("enable");
+    $('#raslider').slider("enable");
+    $('#theta2slider').slider("enable");
+    $('#rpmslider').slider("enable");
+    $('#Pslider').slider("enable");    
+    }
+    if(omega>=0){
+    omega=(((2*3.14*rpm)/6)-0.2*time);
+    if(omega<=0)
+    omega=0;
+    }
+
+    theta3 = theta3+omega;	//not sure of this omega to theta conversion
+    x1=r*Math.cos(rad(theta3));			
+    y1=r*Math.sin(rad(theta3));
+    x2=r*Math.cos(rad(theta3+90));
+    y2=r*Math.sin(rad(theta3+90));
+
+    f.xcoord=0;
+    f.ycoord=0;
+    j.xcoord=f.xcoord+(Math.sin((theta_rod))*65);
+    j.ycoord=f.ycoord+(65*(Math.cos((theta_rod))));
+    b1.xcoord=j.xcoord+(b*(Math.cos((theta_rod))));
+    b1.ycoord=j.ycoord-(b*Math.sin((theta_rod)));
+    a1.xcoord=j.xcoord+(a*(Math.cos((theta_rod))));
+    a1.ycoord=j.ycoord-(a*Math.sin((theta_rod)));
+    c1.xcoord=f.xcoord;
+    c1.ycoord=f.ycoord+c;
+    pc.xcoord=f.xcoord+b;
+    pc.ycoord=c1.ycoord-2*r;
+    r1.xcoord=pc.xcoord;
+    r1.ycoord=pc.ycoord+r; 
+   
+    z1.xcoord=x1;
+    z1.ycoord=y1;
+    z2.xcoord=(-1*x1);
+    z2.ycoord=(-1*y1);
+    z3.xcoord=x2;
+    z3.ycoord=y2;
+    z4.xcoord=(-1*x2);
+    z4.ycoord=(-1*y2);
+    printcomment(" Brake rod is pivoted about F, i.e, fulcrum is grounded. RPM v/s Time is the output",1);
+
+   
+    draw();
+ 
+  }
+
+    //Simulation graphics
+    function draw()
+    {
+      canvas = document.getElementById("simscreen");
+      ctx = canvas.getContext("2d");
+      ctx.clearRect(0,0,550,400);  //clears the complete canvas#simscreen everytime   
+      $('#titleincanvas').show();
+      a1=pointtrans(a1,trans);
+      b1=pointtrans(b1,trans);
+      c1=pointtrans(c1,trans);
+      r1=pointtrans(r1,trans);
+      f=pointtrans(f,trans);  
+      j=pointtrans(j,trans);
+      pc=pointtrans(pc,trans);
+      z1=pointtrans(z1,r1);
+      z2=pointtrans(z2,r1);
+      z3=pointtrans(z3,r1);
+      z4=pointtrans(z4,r1);
+
+      /*ctx.beginPath();  
+      ctx.strokeStyle="#000000";
+      ctx.lineWidth=10;
+      ctx.moveTo(j.xcoord,j.ycoord);
+      ctx.lineTo(j.xcoord+200,o.ycoord);
+      ctx.stroke();
+      ctx.closePath();*/
+
+     // document.getElementById('titleincanvas').innerHTML="a";
+      pointjoin(b1,r1,ctx,'#600465',2*r*Math.sin(rad(theta2/2)));
+      pointjoin(f,j,ctx,"#0066FF",10);
+      pointjoin(j,b1,ctx,"#0066FF",10);
+      pointdisp(j, ctx, 5, "#0066FF", "#0066FF");
+      pointjoin(b1,a1,ctx,"#0066FF",10);
+      pointdisp(f, ctx, 5, '#600217', '#600217');
+      pointdisp(r1, ctx, r, '#60DF17', '#60DF17');
+      pointjoin(r1, z1, ctx, "#000000", 5);
+      pointjoin(r1, z2, ctx, "#000000", 5);
+      pointjoin(r1, z3, ctx, "#000000", 5);
+      pointjoin(r1, z4, ctx, "#000000", 5);
+      
+
+      /*
+      $('#titleincanvas').hide();
+      ctx.strokeStyle="#000000";
+      ctx.font = "16px Georgia";
+      ctx.save();
+      ctx.strokeText("Combination does not satisfy condition to simlutate ",100,200);
+      ctx.restore();
+      printcomment("<center>Please input variables again to simulate</center>",0)
+      }
+      }*/
+    }
+    
+    //function to check whether links satisfy geometrical condition 
+
+   function acceleration()
+
+    {
+      //for finding coefficient of friction
+    if(theta2>=60)
+    {
+     k=mi*((4*Math.sin(theta2))-(2*rad(theta2)+Math.sin(rad(theta2))));         
+    }
+    else
+    {
+     if(theta2<60&&theta2>0)
+      k=mi;
+    }
+     
+    I=0.5*80*(r)*(r);
+    if (imgfilename=="bluecwdull")         //When disk is rotating clock wise
+    {if(c=0){
+    t= (k*P*a*r)/b;
+    } 
+    else if(c>0)
+    {    t=(k*P*a*r)/(b-k*Math.abs(c));
+    }
+    else if(c<0)
+    { t=(k*P*a*r)/(b+k*Math.abs(c))
+    }
+    else{
+        t=0;
+    }
+    }
+
+    if(imgfilename=="blueccwdull")      //When it disk rotating counter clock wise
+    {                                     
+      if(c=0)
+    {
+    t=(k*P*a*r)/b;
+    } 
+    else if(c>0){
+    t=(k*P*a*r)/(b+k*Math.abs(c));
+    }
+    else if(c<0)
+    { t=(k*P*a*r)/(b-k*Math.abs(c));
+    }
+    }
+    acce= t/I;
+    }
+    //total time taken to stop the wheel
+    function rot_time()
+    {
+    ti=(2*Math.PI*rpm)/(acce*60);
+    }
+
+    //This function used for plotting graph
+    /*function drawgraphh()
+      {
+        document.getElementById("graph").innerHTML = "";
+        if(gr == 0)
+        {
+          document.getElementById("graph").style.visibility = "visible";
+          document.getElementById("eqn").style.visibility = "visible";
+          document.getElementById("myImg").style.visibility = "hidden";
+          document.getElementById("fb").style.visibility = "hidden";
+          gr = 1;
+          for(plott=100;plott<=150;plott++)
+          {
+            omega1=(2*3.14*(plott))/600;
+            h2=(m+m1)*9.81/(omega1*omega1*m*2)*10;//calculates h value
+            datapoints1.push({x:h2,y:plott});
+          }
+              drawgraph("graph", datapoints1, "height(mm)", "n(rpm)");//Used graph.ob.js and graph_use.ob.js files plot graph	
+          }
+          else if(gr == 1)
+          {
+            document.getElementById("graph").style.visibility = "hidden";
+            document.getElementById("eqn").style.visibility = "hidden";
+	    	document.getElementById("myImg").style.visibility = "visible";
+			document.getElementById("fb").style.visibility = "visible";
+	    	gr = 0;
+	    	datapoints1.length = 0;//clears the datapoints
+	    }
+  	}*/
+	 function printcomment()
+	      {
+	  document.getElementById('commentboxleft').style.width='570px';
+	  document.getElementById('commentboxleft').innerHTML = "<center>Change W (Thrust) or M (Moment) to see the change in RPM</center>"; 
+	  // ignore use of deprecated tag <center> . Code is executed only if printcomment function receives inappropriate commentloc value
+	  }
+</script>
+  
+
+  <div id="container">
+  <div id="simtitle">Block Brake</div>
+  <canvas id="simscreen" height="400px" width="550px"></canvas>  
+  <div id="titleincanvas"></div>
+  <div id="graph" style="position: absolute;left:275px; top: 180px;width:200px;height:200px"></div>
+  <div id="commentboxleft"></div>
+          
+  <!-- DND-Title of region for variables display --> 
+<div id="vartitle">VARIABLES</div>
+
+<!-- Region for Input parameters of simulation -->
+<div id="variables">
+
+<!-- System variable input from user through slider and spinner jQuery widgets 
+repeat block with new variable name and new id for widgets-->
+<div class="variable">
+<div class="varname"><p title="Link Length">a (cm)</p>
+<input id="aspinner"></input></div>
+<div id="aslider"></div>
+</div>
+
+<div class="variable">
+<div class="varname"><p title="Link Length">b (cm)</p>
+<input id="bspinner"></input></div>
+<div id="bslider"></div>
+</div>
+
+<div class="variable">
+<div class="varname"><p title="Link Length"> c (cm)</p>
+<input id="cspinner"></input></div>
+<div id="cslider"></div>
+</div>
+
+<div class="variable">
+<div class="varname"><p title="Link Length">radius (cm)</p>
+<input id="raspinner"></input></div>
+<div id="raslider"></div>
+</div>
+
+<div class="variable">
+        <div class="varname"><p title="Link Length">&micro;</p>
+        <input id="mspinner"></input></div>
+        <div id="mslider"></div>
+        </div>
+
+<div id = "theta2set" class="variable">
+<div class="varname"><p title='Input Angle'>2&theta; (&deg;) </p>
+<input id="theta2spinner"></input></div>
+<div id="theta2slider"></div>
+</div>
+
+<div class="variable">
+        <div class="varname"><p title="Apllied Force"> P (N)</p>
+        <input id="Pspinner"></input></div>
+        <div id="Pslider"></div>
+        </div>
+
+<div id = "RPM" class="variable">
+<div class="varname"><p title='Rotation per minute'>RPM(s<sup>-1</sup>) </p>
+<input id="rpmspinner"></input></div>
+<div id="rpmslider"></div>
+</div>
+</div>
+
+<!-- DND-Title of region for controls display -->
+<div id="ctrltitle">CONTROLS</div>
+
+<!-- Region for User controls of simulation -->
+<div id="controls">
+<img id="playpausebutton" onclick="simstate()" src="sins/bluepausedull.png" />
+<img id="rotationbutton" onclick="rotstate()" src="sins/bluecwdull.png" />
+
+  <div class="usercheck">
+      <input type="checkbox" id="cb" onclick="drawgraphh();" />
+      <p>Show Graph</p>
+      <!-- Checkbox to display graph-->
+
+</div>
+</div>
+</div>
+<div id="copyright" title="Developer : Lohith N"> Copyright &copy; SOLVE The Virtual Lab @ NITK Surathkal </div>
+</body>
+</html>
