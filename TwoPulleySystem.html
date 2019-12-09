@@ -65,8 +65,13 @@ var ceil_to_floor = 300;
 var mass_offset = 100;
 var blockx = 50 + 5 + 250 + mass_offset;
 var springx1 = pulley_offset_1;
-var springx2 = pulley_offset_2;
+var springx2 = pulley_offset_2
 
+const PLAY = 0;
+const PAUSE1 = 1;
+const PAUSE2 = 2;
+
+var simstate = PLAY;
 
 const OSCILLATE = 0;
 const FBD = 1;
@@ -182,6 +187,9 @@ var loop = function()
 function draw()
 {
 
+  if(simstate == PAUSE1)
+      return;
+
   time += frameDelay;
   canvas = document.getElementById("simscreen");
   ctx = canvas.getContext("2d");
@@ -215,6 +223,8 @@ function draw()
 
   //movement for spring 2
   p2.ycoord += max_x2 * Math.cos( omega * time / 1000)*50;
+  
+  
 
 
 
@@ -371,12 +381,16 @@ ctx.beginPath();
 
   printcomment('\u03A9 = ' + parseFloat(omega.toFixed(2)) + ' rad/s. \n This is a 1 dof system equivalent to a single mass supported by spring of equi. constant Keq = ' + parseFloat(calculateKEffective(k1, k2).toFixed(1)) + 'N/m', 1);
 
-
+  if(simstate == PAUSE2)
+      simstate = PAUSE1;
 
 }
 
 
 function drawFBD(){
+
+  if(simstate == PAUSE2)
+    return;
 
 	time += frameDelay;
   canvas = document.getElementById("simscreen");
@@ -408,11 +422,14 @@ function drawFBD(){
   //movement for the spring 1
   p1.ycoord += -max_x1 * Math.cos( omega * time / 1000)*50;
 
-  
+
   // drawForceArrow(ctx, p1.xcoord - pulley_rad, p1.ycoord);
 
   //movement for spring 2
   p2.ycoord += max_x2 * Math.cos( omega * time / 1000)*50;
+
+
+  
 
   //pulley 1
   drawPulley(ctx,p1.xcoord,p1.ycoord,pulley_rad);
@@ -452,8 +469,8 @@ function drawFBD(){
 
   //draw mass
   drawrect(center_rect, mass_width	, mass_width, 0, ctx, '#37474F', "#37474F", 1);
-  drawArrowFBD(DIRUP, center_rect.xcoord, center_rect.ycoord, $('#massSpinner').spinner("value") * (9.8 + calculateKEffective(k1,k2) * Math.abs(center_rect.ycoord - o.ycoord )), DIRRIGHT);
-  drawArrowFBD(DIRDOWN, center_rect.xcoord, center_rect.ycoord, $('#massSpinner').spinner("value") * (9.8 + calculateKEffective(k1,k2) * Math.abs(center_rect.ycoord - o.ycoord )), DIRRIGHT);
+  drawArrowFBD(DIRUP, center_rect.xcoord, center_rect.ycoord, $('#massSpinner').spinner("value") * ( 9.8 + calculateKEffective(k1,k2) * Math.abs(center_rect.ycoord - o.ycoord )), DIRRIGHT);
+  drawArrowFBD(DIRDOWN, center_rect.xcoord, center_rect.ycoord, $('#massSpinner').spinner("value") * 9.8 + calculateKEffective(k1,k2) * Math.abs(center_rect.ycoord - o.ycoord ), DIRRIGHT);
   //draw mass fbd
 
 
@@ -465,6 +482,10 @@ function drawFBD(){
 	ctx.strokeText('m*g', center_rect.xcoord- 5, center_rect.ycoord + body_length + 10 );  
 	ctx.strokeText('W', center_rect.xcoord - 10 ,  center_rect.ycoord - body_length - 10);  
 	ctx.restore();	
+
+
+  if(simstate == PAUSE1)
+    simstate == PAUSE2;
 }
 
 function drawArrowFBD(arrow_dir, start_x, start_y, value, value_pos){
@@ -626,6 +647,25 @@ function printcomment(commenttext,commentloc)
   }
 }
 
+
+function changeState(){
+  var imgfilename=document.getElementById('playpausebutton').src;
+  imgfilename = imgfilename.substring(imgfilename.lastIndexOf('/') + 1, imgfilename.lastIndexOf('.'));
+  if (imgfilename=="bluepausedull")
+  {
+    document.getElementById('playpausebutton').src="sins/blueplaydull.png";
+    if(scene == OSCILLATE)
+      simstate=PAUSE1;
+    else if(scene == FBD)
+      simstate=PAUSE2;
+  }
+    if (imgfilename=="blueplaydull")
+  {
+    document.getElementById('playpausebutton').src="sins/bluepausedull.png"; 
+    simstate=PLAY;
+  } 
+}
+
 </script>
 
 </head>
@@ -692,10 +732,15 @@ repeat block with new variable name and new id for widgets-->
 
 <div id="controls">
 
-<img id="playpausebutton" onclick="changeScenePrev()" src="sins/bluebkdulls.png" />
+<!-- <img id="playpausebutton" onclick="changeScenePrev()" src="sins/bluebkdulls.png" /> -->
+<img id="playpausebutton" onclick="changeState()" src="sins/bluepausedull.png" />
 <img id="rotationbutton" onclick="changeSceneNext()" src="sins/bluefwddulls.png" />
 
+
+
 </div>
+
+
 
 </div>
 
