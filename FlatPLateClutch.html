@@ -1,9 +1,7 @@
-<html lang="en-US">
-
-<head>
+<html lang="en-US"><head>
     <meta charset="UTF-8">
     <title>SOLVE - Mechanics of Machines Lab - Flat Plate Clutch</title>
-    <link rel="stylesheet" href="sins/MOMstyle.css" />
+    <link rel="stylesheet" href="sins/MOMstyle.css">
     <!-- <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script> -->
     <!-- <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js'></script> -->
     <script type="text/javascript" src="sins/jquery.min.js"></script>
@@ -12,68 +10,121 @@
     <script src="sins/graph.ob.js"></script>
     <script src="sins/graph_use.ob.js"></script>
     <script src="sins/graph_use2.ob.js"></script>
-    <link href="sins/mathstyle.css" rel="stylesheet" />
+    <link href="sins/mathstyle.css" rel="stylesheet">
     <!--Stylesheet to display Math functions -->
+    <style type="text/css">
+    table td {
+        padding: 1%;
+    }
+    table th {
+        padding: 1%;
+    }
+    table, th, td {
+  border: 2px solid black;
+}
+    </style>
 </head>
 
-<body onload="editcss(); startsim(); varinit();printcomment()">
+<body onload="editcss(); startsim(); varinit();printcomment()" style="zoom: 1;">
 
     <noscript>
 The simulation requires JavaScript to be enabled.
 </noscript>
 
-    <div id="container">
+    <div id="container" style="top: 0px;left: 0px;height: 700px;width: 900px;background-size: 900px 700px;">
         <div id="simtitle">Flat Plate Clutch</div>
         <canvas id="simscreen" height="400" width="550"></canvas>
-        <p id="eqn" style="position:absolute; left: 380px; top: 90px;font-size: 24px; font-family: Times New Roman;">M &alpha; W</p>
-        <!--Used mathstyle.css file to display equation-->
-        <div id="graph" style="position: absolute;left:250px; top: 180px;width:350px;height:320px"></div>
+        <div id="commentboxleft" style="
+    width: 700px;
+    height: auto;
+    border: none;
+">
+<table align="center" style="
+    width: max-content;
+    
+">
+<thead><tr><th>Uniform Pressure Theory</th>
+    <th>Uniform Wear Theory</th></tr></thead>
+            
+            <tbody>
+            <tr>
+                <td>
+                    T<sub>max</sub> is when r<sub>i</sub>=0.577r<sub>o</sub>
+                </td>
+                <td>
+                    T<sub>max</sub> is when r<sub>i</sub>=0
+                </td>
+            </tr>
+            <tr>
+                <td id="TmaxPress">T<sub>max</sub> = 0.00kNmm</td>
+                <td id="TmaxWear">T<sub>max</sub> = 0.00kNmm</td>
+            </tr>
+            <tr>
+                <td id="TorquePress">Torque = 0.00kNmm</td>
+                <td id="TorqueWear">Torque = 0.00kNmm</td>
+            </tr>
+        </tbody></table>
+
+        </div>
+
     </div>
 
     <div id="titleincanvas"></div>
 
-    <div id="commentboxleft"></div>
-
-    <div id="vartitle">VARIABLES</div>
-    <div id="variables">
-        <div id="mset" class="variable">
+    
+    <div id="vartitle" style="
+    left: 710px;
+    top: 118px;
+">VARIABLES</div>
+    <div id="variables" style="
+    top: 150px;
+    left: 700px;
+">
+        <div id="mset" class="variable" style="padding-top: 20px;">
             <div class="varname">
-                <p title="Speed of the Governor">W (N)&nbsp;</p>
-                <input id="nspinner"></div>
-            <div id="nslider" style="margin: 5%"></div>
+                <p title="Speed of the Governor">F (N)&nbsp;</p>
+                <span class="ui-spinner ui-widget ui-widget-content ui-corner-all"><span class="ui-spinner ui-widget ui-widget-content ui-corner-all"><input id="nspinner" aria-valuemin="0" aria-valuemax="1000" class="ui-spinner-input" autocomplete="off" role="spinbutton" aria-valuenow="0"><a class="ui-spinner-button ui-spinner-up ui-corner-tr ui-button ui-widget ui-state-default ui-button-text-only" tabindex="-1" role="button" aria-disabled="false"><span class="ui-button-text"><span class="ui-icon ui-icon-triangle-1-n">▲</span></span></a><a class="ui-spinner-button ui-spinner-down ui-corner-br ui-button ui-widget ui-state-default ui-button-text-only" tabindex="-1" role="button" aria-disabled="false"><span class="ui-button-text"><span class="ui-icon ui-icon-triangle-1-s">▼</span></span></a></span><a class="ui-spinner-button ui-spinner-up ui-corner-tr ui-button ui-widget ui-state-default ui-button-text-only" tabindex="-1" role="button" aria-disabled="false"><span class="ui-button-text"><span class="ui-icon ui-icon-triangle-1-n">▲</span></span></a><a class="ui-spinner-button ui-spinner-down ui-corner-br ui-button ui-widget ui-state-default ui-button-text-only" tabindex="-1" role="button" aria-disabled="false"><span class="ui-button-text"><span class="ui-icon ui-icon-triangle-1-s">▼</span></span></a></span></div>
+            <div id="nslider" style="margin: 5%" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 0%;"></a></div>
             <div class="varname">
-                <p title="Speed of the Governor">M (Nm)&nbsp;</p>
-                <input id="Mspinner"></div>
-            <div id="Mslider"></div>
+                <p title="Speed of the Governor">r<sub>i</sub>&nbsp;</p>
+                <span class="ui-spinner ui-widget ui-widget-content ui-corner-all"><span class="ui-spinner ui-widget ui-widget-content ui-corner-all"><input id="n1spinner" aria-valuemin="0" aria-valuemax="230" class="ui-spinner-input" autocomplete="off" role="spinbutton" aria-valuenow="0"><a class="ui-spinner-button ui-spinner-up ui-corner-tr ui-button ui-widget ui-state-default ui-button-text-only" tabindex="-1" role="button" aria-disabled="false"><span class="ui-button-text"><span class="ui-icon ui-icon-triangle-1-n">▲</span></span></a><a class="ui-spinner-button ui-spinner-down ui-corner-br ui-button ui-widget ui-state-default ui-button-text-only" tabindex="-1" role="button" aria-disabled="false"><span class="ui-button-text"><span class="ui-icon ui-icon-triangle-1-s">▼</span></span></a></span><a class="ui-spinner-button ui-spinner-up ui-corner-tr ui-button ui-widget ui-state-default ui-button-text-only" tabindex="-1" role="button" aria-disabled="false"><span class="ui-button-text"><span class="ui-icon ui-icon-triangle-1-n">▲</span></span></a><a class="ui-spinner-button ui-spinner-down ui-corner-br ui-button ui-widget ui-state-default ui-button-text-only" tabindex="-1" role="button" aria-disabled="false"><span class="ui-button-text"><span class="ui-icon ui-icon-triangle-1-s">▼</span></span></a></span></div>
+            <div id="n1slider" style="margin: 5%" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 0%;"></a></div>
         </div>
 
-        <div id="nset" class="variable">
+        <div id="nset" class="variable" style="padding-top: 20px;">
             <div class="varname">
                 <p title="Height of the Governor">RPM &nbsp; </p>
                 <input id="hval1" type="textbox" style="background-color:white;width:60px;color:black"></div>
         </div>
-        <div id="nset" class="variable">
+        <!-- <div id="nset" class="variable">
             <div class="varname">
                 <p title="Height of the Governor">Torque &nbsp; </p>
                 <input id="hval2" type="textbox" style="background-color:white;width:60px;color:black"></div>
+        </div> -->
+
+
+    </div>
+
+
+    <div id="ctrltitle" style="
+    top: 480px;
+    left: 710px;
+">CONSTANTS</div>
+    <div id="controls" style="
+    left: 670px;
+    top: 500px;
+">
+        <div class="usercheck" style="width: max-content; left: 30px;">
+            <p>In this case r<sub>o</sub> = 230mm</p>
+            
         </div>
-
-
     </div>
 
+    <div id="copyright" title="Developer : Adharsh Kamath" style="
+    top: 685px;
+"> Copyright © SOLVE The Virtual Lab @ NITK Surathkal </div>
 
-    <div id="ctrltitle">CONTROLS</div>
-    <div id="controls">
-        <div class="usercheck">
-            <input type="checkbox" id="cb" onclick="drawgraphh();" />
-            <p>Show Graph</p>
-            <!-- Checkbox to display graph-->
-        </div>
-    </div>
-
-    <div id="copyright" title="Developer : Adharsh Kamath"> Copyright &copy; SOLVE The Virtual Lab @ NITK Surathkal </div>
-
-    </div>
+    
     <script type="text/javascript">
         var canvas = document.getElementById("simscreen"); //gets canvas id
         var ctx = canvas.getContext("2d"); //gets canvas context
@@ -94,9 +145,10 @@ The simulation requires JavaScript to be enabled.
 
         var d = 20; //distance between plates
 
-        var r_out = 60; //radius of big plate
+        var r_out = 57.5; //radius of big plate
         var r_in = 9; //radius of shafts
-        var r = 38; //radius of small plate
+        var r = 30; //radius of small plate
+        var r_frict = 0;
         var x1 = 0; //coordinates for outer disc radial rods
         var y1 = 0;
         var x2 = 0;
@@ -109,7 +161,7 @@ The simulation requires JavaScript to be enabled.
         //Here the point() is defind function in proell.js file to define a point
         var trans = new point(150, 150); //top view center point
         var transa = new point(150, 335); //front view center point
-        var transaa = new point(200, 450); //graph location
+        var transaa = new point(420, 150); //graph location
         //frontview points
         var o = new point(0, 0, ""); //origin
         var z1 = new point(0, 0, ""); //outer radial rod endpoints
@@ -120,6 +172,17 @@ The simulation requires JavaScript to be enabled.
         var s2 = new point(0, 0, "");
         var s3 = new point(0, 0, "");
         var s4 = new point(0, 0, "");
+        //side view
+        var os = new point(0, 0, ""); //origin
+        var zs1 = new point(0, 0, ""); //outer radial rod endpoints
+        var zs2 = new point(0, 0, "");
+        var zs3 = new point(0, 0, "");
+        var zs4 = new point(0, 0, "");
+        var ss1 = new point(0, 0, ""); //inner radial rod endpoints
+        var ss2 = new point(0, 0, "");
+        var ss3 = new point(0, 0, "");
+        var ss4 = new point(0, 0, "");
+        var ss5 = new point(0, 0, "");
         //topview points
         var p = new point(0, 0, ""); //origin
         var p1 = new point(0, 0, ""); //bigger disc end points
@@ -159,7 +222,7 @@ The simulation requires JavaScript to be enabled.
         }
 
         function startsim() {
-            simTimeId = setInterval("varupdate();", 100);
+            simTimeId = setInterval("varupdate();", 0.01);
         }
 
         function varinit() {
@@ -167,81 +230,103 @@ The simulation requires JavaScript to be enabled.
             $('#nslider').slider("value", 0);
             $('#nspinner').spinner("value", 0);
 
-            $('#Mslider').slider("value", 0);
-            $('#Mspinner').spinner("value", 0);
+            $('#n1slider').slider("value", 0);
+            $('#n1spinner').spinner("value", 0);
 
         }
 
         function varchange() {
             $('#nslider').slider({
-                max: 2000,
+                max: 1000,
                 min: 0,
                 step: 1
             }); // slider initialisation : jQuery widget
             $('#nspinner').spinner({
-                max: 2000,
+                max: 1000,
                 min: 0,
                 step: 1
             }); // number initialisation : jQuery widget
             $("#nslider").on("slide", function(e, ui) {
                 $('#nspinner').spinner("value", ui.value);
-                $('#Mspinner').spinner("value", 0.05 * ui.value);
-                $('#Mslider').slider("value", 0.05 * ui.value);
+               
             });
             $("#nspinner").on("spin", function(e, ui) {
                 $('#nslider').slider("value", ui.value);
-                $('#Mspinner').spinner("value", 0.05 * ui.value);
-                $('#Mslider').slider("value", 0.05 * ui.value);
+               
             });
             $("#nspinner").on("change", function() {
                 varchange()
             });
-            $('#Mslider').slider({
-                max: 100,
+
+            $('#n1slider').slider({
+                max: 230,
                 min: 0,
-                step: 0.5
+                step: 1
             }); // slider initialisation : jQuery widget
-            $('#Mspinner').spinner({
-                max: 100,
+            $('#n1spinner').spinner({
+                max: 230,
                 min: 0,
-                step: 0.5
+                step: 1
             }); // number initialisation : jQuery widget
-            $("#Mslider").on("slide", function(e, ui) {
-                $('#Mspinner').spinner("value", ui.value);
-                $('#nspinner').spinner("value", 20 * ui.value);
-                $('#nslider').slider("value", 20 * ui.value)
+            $("#n1slider").on("slide", function(e, ui) {
+                $('#n1spinner').spinner("value", ui.value);
+               
             });
-            $("#Mspinner").on("spin", function(e, ui) {
-                $('#Mslider').slider("value", ui.value);
-                $('#nspinner').spinner("value", 20 * ui.value);
-                $('#nslider').slider("value", 20 * ui.value)
+            $("#n1spinner").on("spin", function(e, ui) {
+                $('#n1slider').slider("value", ui.value);
+               
             });
-            $("#Mspinner").on("change", function() {
+            $("#n1spinner").on("change", function() {
                 varchange()
             });
+
+            // $('#Mslider').slider({
+            //     max: 100,
+            //     min: 0,
+            //     step: 0.5
+            // }); // slider initialisation : jQuery widget
+            // $('#Mspinner').spinner({
+            //     max: 100,
+            //     min: 0,
+            //     step: 0.5
+            // }); // number initialisation : jQuery widget
+            // $("#Mslider").on("slide", function(e, ui) {
+            //     $('#Mspinner').spinner("value", ui.value);
+            //     $('#nspinner').spinner("value", 20 * ui.value);
+            //     $('#nslider').slider("value", 20 * ui.value)
+            // });
+            // $("#Mspinner").on("spin", function(e, ui) {
+            //     $('#Mslider').slider("value", ui.value);
+            //     $('#nspinner').spinner("value", 20 * ui.value);
+            //     $('#nslider').slider("value", 20 * ui.value)
+            // });
+            // $("#Mspinner").on("change", function() {
+            //     varchange()
+            // });
             varupdate();
         }
 
         function varupdate() {
             Thrust = $('#nspinner').spinner("value");
-            Moment = $('#Mspinner').spinner('value');
+            //Moment = $('#Mspinner').spinner('value');
+            r_frict = $('#n1spinner').spinner("value");
             var thirtyByPi = 9.5499;
-            omegain = 100;
-            thetain = thetain + (0.2 * deg(omegain));
+            omegain = 21;
+            thetain = thetain + (0.6 * deg(omegain));
             x1 = r_out * Math.cos(rad(thetain));
             y1 = r_out * Math.sin(rad(thetain));
             // x2 = r_out * Math.cos(rad(thetain + 90));
             // y2 = r_out * Math.sin(rad(thetain + 90));
-            omegaout =  ((400 - 100) * (Thrust) / 5000);
+            omegaout =  ((21) * (Thrust) / 1000);
             document.getElementById("hval1").value = (omegaout * thirtyByPi).toFixed(0);
             
-            document.getElementById("hval2").value = ((Thrust/4000)*(r+r_out)).toFixed(0);
-            thetaout = thetaout + (0.2 * deg(omegaout));
+            //document.getElementById("hval2").value = ((Thrust/4000)*(r+r_out)).toFixed(0);
+            thetaout = thetaout + (0.6 * deg(omegaout));
             x3 = r * Math.cos(rad(thetaout));
             y3 = r * Math.sin(rad(thetaout));
             // x4 = r * Math.cos(rad(thetaout + 90));
             // y4 = r * Math.sin(rad(thetaout + 90));
-            d = 30 - (30 * Thrust / 5000) + 1;
+            d = 20 - (30 * Thrust / 2000) + 1;
             //front view variables
             o.xcoord = 0;
             o.ycoord = 0;
@@ -262,6 +347,28 @@ The simulation requires JavaScript to be enabled.
             s3.ycoord = y4;
             s4.xcoord = (-1 * x4);
             s4.ycoord = (-1 * y4);
+
+            os.xcoord = 0;
+            os.ycoord = 0;
+            zs1.xcoord = x1;
+            zs1.ycoord = y1;
+            zs2.xcoord = (-1 * x1);
+            zs2.ycoord = (-1 * y1);
+            zs3.xcoord = x2;
+            zs3.ycoord = y2;
+            zs4.xcoord = (-1 * x2);
+            zs4.ycoord = (-1 * y2);
+
+            ss1.xcoord = x3;
+            ss1.ycoord = y3;
+            ss2.xcoord = (-1 * x3);
+            ss2.ycoord = (-1 * y3);
+            ss3.xcoord = x4;
+            ss3.ycoord = y4;
+            ss4.xcoord = (-1 * x4);
+            ss4.ycoord = (-1 * y4);
+            ss5.xcoord = os.xcoord + (r_frict/4);
+            ss5.ycoord = os.ycoord;
 
             //top view variables
             p.xcoord = 0;
@@ -300,16 +407,16 @@ The simulation requires JavaScript to be enabled.
             b3.ycoord = -(r - 2);
             b4.xcoord = 44 - 2 * ((Thrust) / 5000);
             b4.ycoord = -30;
-
-
             draw();
+            printcomment();
         }
 
         function draw() {
-            ctx.clearRect(0, 0, 595, 550);
+            ctx.clearRect(0, 0, 620, 650);
             ctx.font = "12pt Verdana";
             ctx.fillText("Top View", 50, 80);
             ctx.fillText("Front View", 50, 280);
+            ctx.fillText("Friction Lining", 320, 80);
             pointtrans(o, transa);
             pointtrans(z1, transa);
             pointtrans(z2, transa);
@@ -319,6 +426,17 @@ The simulation requires JavaScript to be enabled.
             pointtrans(s2, transa);
             pointtrans(s3, transa);
             pointtrans(s4, transa);
+
+            pointtrans(os, transaa);
+            pointtrans(zs1, transaa);
+            pointtrans(zs2, transaa);
+            pointtrans(zs3, transaa);
+            pointtrans(zs4, transaa);
+            pointtrans(ss1, transaa);
+            pointtrans(ss2, transaa);
+            pointtrans(ss3, transaa);
+            pointtrans(ss4, transaa);
+            pointtrans(ss5, transaa);
 
             //Top View Points
             pointtrans(p1, trans);
@@ -340,33 +458,22 @@ The simulation requires JavaScript to be enabled.
             pointtrans(b3, trans);
             pointtrans(b4, trans);
 
-
-
-            //Plotting the co-ordinates 
-            //	ctx.beginPath();
-            //ctx.lineWidth=1;
-            //		ctx.strokeStyle= "#666666"; 
-            //		ctx.moveTo(150,o.xcoord);
-            //		ctx.lineTo(150,-400);
-            //		ctx.lineTo(150,500);
-            //		ctx.moveTo(150,250);
-            //		ctx.lineTo(50,250);
-            //		ctx.lineTo(250,250);
-            //		ctx.stroke();
-            //		ctx.closePath();
-
             //Front
             pointdisp(o, ctx, r_out, '#600217', '#600217');
             pointjoin(o, z1, ctx, "#000000", 5);
-            // pointjoin(o, z2, ctx, "#000000", 5);
-            // pointjoin(o, z3, ctx, "#000000", 5);
-            // pointjoin(o, z4, ctx, "#000000", 5);
             pointdisp(o, ctx, r, '#7F00FF', '#7F00FF');
             pointjoin(o, s1, ctx, "#0885d8", 5);
-            // pointjoin(o, s2, ctx, "#0885d8", 5);
-            // pointjoin(o, s3, ctx, "#0885d8", 5);
-            // pointjoin(o, s4, ctx, "#0885d8", 5);
             pointdisp(o, ctx, r_in, '#013220', '#013220');
+             //side
+             pointdisp(os, ctx, r_out, '#600217', '#600217');
+            //pointjoin(os, zs1, ctx, "#000000", 5);
+            pointdisp(os, ctx, r_frict/4, '#555555', '#555555');
+            //pointjoin(os, ss1, ctx, "#0885d8", 5);
+            pointdisp(os, ctx, r_in, '#013220', '#013220');
+            pointjoin(os, ss5, ctx, '#FFFFFF', 2);
+            ctx.font = "13pt Arial";
+            //ctx.fillStyle = "white";
+            ctx.fillText("ri", 415+r_frict/8, 170);
             //Top
             pointjoin(p1, p2, ctx, "#0C0C0C", 2 * r_in);
             pointjoin(a1, a2, ctx, "#AABBCC", 10);
@@ -403,11 +510,17 @@ The simulation requires JavaScript to be enabled.
         }
 
         function printcomment() {
-            document.getElementById('commentboxleft').style.width = '570px';
-            document.getElementById('commentboxleft').innerHTML = "<center>Change W (Thrust) or M (Moment) to see the change in RPM</center>";
+            var PressTheory = ((0.25 * Thrust * (r_out + r_frict))/100).toFixed(2);
+            var WearTheory = ((0.667 * 0.5 * Thrust * ((12167000 - (r_frict* r_frict * r_frict))/(52900 - (r_frict * r_frict))))/100).toFixed(2);
+            //document.getElementById('commentboxleft').innerHTML = "T<sub>max</sub> by Uniform Pressure theory is when r<sub>i</sub>=0.577r<sub>o</sub>; T<sub>max</sub>= "+(0.39425*Thrust*2.30).toFixed(2)+"kNmm . Torque by Uniform Pressure theory:" + PressTheory + "kNmm .T<sub>max</sub> by Uniform Wear theory is when r<sub>i</sub>=0; T<sub>max</sub>="+(0.5*0.66667*Thrust*2.30).toFixed(2)+"kNmm; Torque by Wear theory:" + WearTheory +" kNmm" ;
             // ignore use of deprecated tag <center> . Code is executed only if printcomment function receives inappropriate commentloc value
+            document.getElementById("TmaxPress").innerHTML  = "T<sub>max</sub> = " + (0.39425*Thrust*2.30).toFixed(2)+"kNmm";
+            document.getElementById("TmaxWear").innerHTML  = "T<sub>max</sub> = " +(0.5*0.66667*Thrust*2.30).toFixed(2)+"kNmm";
+            document.getElementById("TorquePress").innerHTML  = "Torque = " + PressTheory +"kNmm";
+            document.getElementById("TorqueWear").innerHTML  = "Torque = " + WearTheory +"kNmm";
+
         }
     </script>
-</body>
 
-</html>
+
+</body></html>
