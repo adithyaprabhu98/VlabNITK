@@ -11,8 +11,14 @@
 
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js'></script>
-
+<script src="sins/graph.ob.js"></script>
+<script src="sins/graph_use.ob.js"></script>
+<script src="sins/graph_use2.ob.js"></script>
+<!-- <script src="sins/canvasjs.min.js"></script>
+<script type="sins/jquery.canvasjs.min"></script> -->
 <script type="text/javascript" src= "sins/MOMscript.js"></script>
+<link href="sins/mathstyle.css" rel="stylesheet" /><!--Stylesheet to display Math functions -->
+
 
 <script type="text/javascript" >
 //Script specific to simulation
@@ -197,10 +203,13 @@ var temp=0;
   var m_not;
   var z_not;
   var F_not;
+  var p2=0;
   const page1=0;
   const page2=1;
   const page3=2;
+  var h2=0;
   var scene=page1;
+  var datapoints1 = [];
 /*
 // for trials during development
 function trythis()
@@ -492,7 +501,7 @@ t=t+.01;
 Wn=Math.sqrt(k/m);
 n = w / Wn;
 //x1=(m/k)*(Math.sin(w*t));
-//phi = atan((2*z*n)/(1-n*n));
+phi = Math.atan((2*z*n)/(1-n*n));
 x1=((F*n*n)/Math.sqrt(((1-n*n)* (1 - n * n))+(2*z*n)* (2 * z * n))*(Math.sin(w*t)));
 
 //n*n/Math.sqrt(((1-n*n)* (1 - n * n))+(2*z*n)* (2 * z * n))
@@ -1119,19 +1128,24 @@ $('#datatable2').show();
   pty=[];
   }*/
 
-  if(w_not!=w || k_not!=k || z_not!=z || F_not!=F || m_not!=m)
+  if(w_not!=w || k_not!=k || z_not!=z || F_not!=F || m_not!=m )
   {
     j=100;
+    if(p2==1){
+      ctx.clearRect(0,0,550,400); 
+    }
   }
+
   ptx.push(a.xcoord+j);
   pty.push(a.ycoord);
   j=j+1;
   plot_graph(ptx,pty,ctx);
-  w_not=w;
-  F_not=F;
-  z_not=z;
-  m_not=m;
-  k_not=k;
+    w_not=w;
+    F_not=F;
+    z_not=z;
+    m_not=m;
+    k_not=k;
+
 }
 //function to check whether links satisfy grashof condition
 /*function checkGrashof()
@@ -1167,6 +1181,23 @@ function drawForpage2()
   canvas = document.getElementById("simscreen");
   ctx = canvas.getContext("2d");
   ctx.clearRect(0,0,550,400); 
+  // document.getElementById("graph").innerHTML = "";
+  // document.getElementById("graph").style.visibility = "visible";
+  // $('#r3spinner').spinner("disable");
+  // $('#r3slider').slider("disable");
+  
+  // for(j=0;j<=100;j++)
+  //     {
+  //       h2 = (j * j) /Math.sqrt(((1-j*j)* (1 - j * j))+(2*z*j))* (2 * z * j); 
+  //       datapoints1.push({x:h2,y:j});
+  //     }
+  //     drawgraph("graph", datapoints1, "height(mm)", "n(rpm)");
+
+
+
+
+     
+
   var dps = [];
   var chart = new CanvasJS.Chart("chartContainer", {
   
@@ -1187,18 +1218,26 @@ function drawForpage2()
     markerSize: 0,
     toolTipContent: "<b>Magnification Factor: </b>{x}<br/><b>: </b>{y}",
     dataPoints: dps
-  }
+  },
+  {
+    type: "spline",
+    name: "Magnification Factor",
+    markerSize: 10,
+    toolTipContent: "<b>Magnification Factor: </b>{x}<br/><b>: </b>{y}",
+    dataPoints: [
+      { x: n, y: MF }
+  ]}
   ]
 });
   var xVal=0;
   var yVal=0;
   var updateInterval = 1000;
-  var dataLength = 50;
+  var dataLength = 100;
   var updateChart = function (count) {
   count = count || 1;
   // count is number of times loop runs to generate random dataPoints.
   for (var j = 0; j < count; j++) { 
-    yVal = j*j/Math.sqrt(((1-j*j)* (1 - j * j))+(2*z*j)* (2 * z * j));
+    yVal = (j * j) /Math.sqrt(((1-j*j)* (1 - j * j))+(2*z*j))* (2 * z * j);
     dps.push({
       x: xVal,
       y: yVal
@@ -1243,13 +1282,23 @@ function drawForpage3()
     type: "line",
     toolTipContent: "<b>Phase Angle: </b>{x}<br/><b>: </b>{y}",
     dataPoints: dps_2
-  }]
+  },
+  {
+    type: "spline",
+    name: "Phase Angle",
+    markerSize: 10,
+    toolTipContent: "<b>Phase Angle: </b>{x}<br/><b>: </b>{y}",
+    dataPoints: [
+      { x: n, y: phi }
+  ]}
+
+  ]
 }); 
 
   var xVal=0;
   var yVal=0;
   var updateInterval = 1000;
-  var dataLength = 50;
+  var dataLength = 100;
   var updateChart = function (count) {
   count = count || 1;
   // count is number of times loop runs to generate random dataPoints.
@@ -1412,14 +1461,15 @@ send an email to adityaraman09@gmail.com for any communication
 
 <!-- Region for simulation display -->
 <canvas id="simscreen" height="400px" width="550px"></canvas>
+<div id="graph" style="position: absolute;left:280px; top: 180px;width:300px;height:300px"></div>
+
 
 <div id="titleincanvas"></div>
 <div id="datatable1" class="datatable"></div>
 <div id="datatable2" class="datatable"></div>
 <div id="chartContainer" style="position: relative; left: 50px; top: 100px; style=height:400px; width: 60%;"></div>
-<div id="chartContainer2" style="position: relative; left: 50px; top: 100px; style=height:400px; width: 60%;"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 <!-- Equation Reference and Legend for Graphs etc 
 <div id="quickreficon" title="Equations" onclick="showEquations();"></div>
