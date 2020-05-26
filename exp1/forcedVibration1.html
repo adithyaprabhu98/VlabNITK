@@ -11,7 +11,7 @@
 
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js'></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+
 <script type="text/javascript" src= "sins/MOMscript.js"></script>
 
 <script type="text/javascript" >
@@ -23,14 +23,12 @@ var enabled_img=true;
 var simstatus=0; 
 var rotstatus=1;
 var phi=0;
-var update_page1 = false;
 //comments section
 var commenttext="Some Text";
 var commentloc=0;
 //computing section
 var trans= new point(100,150);
 var j=100;
-var mass1 = 21.69;
 var cross= new point(375,150);
 var a= new point(0,0,"A");
 var graph_p1=new point(0,0,"");
@@ -219,6 +217,7 @@ $('#datatable1').css('left','400px');
 $('#datatable1').css('top','100px');
 $('#datatable2').css('left','100px');
 $('#datatable2').css('top','100px');
+
 //$('#legend').css("width",document.getElementById('legendimg').width+"px");
 //$('#quickref').css("height",document.getElementById('quickrefimg').height+"px");
 
@@ -328,8 +327,8 @@ $('#r2spinner').spinner("value", 60);
 $('#r3slider').slider("value", 80); 
 $('#r3spinner').spinner("value", 80);
 //Variable r4 slider and number input types
-$('#r4slider').slider("value", 20); 
-$('#r4spinner').spinner("value", 20);
+$('#r4slider').slider("value", 60); 
+$('#r4spinner').spinner("value", 60);
 
 
   $('#r5slider').slider("value", 60);
@@ -365,8 +364,8 @@ $( "#r2spinner" ).on( "spin", function( e, ui ) { $('#r2slider').slider("value",
 $( "#r2spinner" ).on( "change", function() {  varchange() } );
 
 //Variable r1 slider and number input types
-$('#r3slider').slider({ max : 1, min : 0.05, step : 0.05 });    // slider initialisation : jQuery widget
-$('#r3spinner').spinner({ max : 1, min : 0.05, step : 0.05 });    // number initialisation : jQuery widget      
+$('#r3slider').slider({ max : 1, min : 0, step : 0.05 });    // slider initialisation : jQuery widget
+$('#r3spinner').spinner({ max : 1, min : 0, step : 0.05 });    // number initialisation : jQuery widget      
 // monitoring change in value and connecting slider and number
 // setting trace point coordinate arrays to empty on change of link length
 $( "#r3slider" ).on( "slide", function( e, ui ) { $('#r3spinner').spinner("value",ui.value); ptx=[]; pty=[]; } );
@@ -382,8 +381,8 @@ $( "#r4slider" ).on( "slide", function( e, ui ) { $('#r4spinner').spinner("value
 $( "#r4spinner" ).on( "spin", function( e, ui ) { $('#r4slider').slider("value",ui.value); ptx=[]; pty=[]; } );
 $( "#r4spinner" ).on( "change", function() {  varchange() } );
 
-  $('#r5slider').slider({ max: 50, min: 0, step:0.1 });    // slider initialisation : jQuery widget
-  $('#r5spinner').spinner({ max: 50, min: 0, step: 0.1 }); 
+  $('#r5slider').slider({ max: 100, min: 0, step: 1 });    // slider initialisation : jQuery widget
+  $('#r5spinner').spinner({ max: 100, min: 0, step: 1 }); 
 
   $("#r5slider").on("slide", function (e, ui) { $('#r5spinner').spinner("value", ui.value); ptx = []; pty = []; });
   $("#r5spinner").on("spin", function (e, ui) { $('#r5slider').slider("value", ui.value); ptx = []; pty = []; });
@@ -576,7 +575,7 @@ a48.ycoord=-180;
   d7.xcoord=170;
   d7.ycoord=-180+10*theta2;*/
   b1.xcoord=55;
-  b1.ycoord=-150;
+  b1.ycoord=-160;
   d1.xcoord=70;
   d1.ycoord=-150+1*((a.ycoord-15-b1.ycoord)/8);
   c3.xcoord=40;
@@ -593,7 +592,7 @@ a48.ycoord=-180;
   d6.xcoord=55;
   d6.ycoord=-150+7*((a.ycoord-15-b1.ycoord)/8);
   d7.xcoord=55;
-  d7.ycoord=a.ycoord-(9+(m-10)/42);
+  d7.ycoord=a.ycoord-15;
   
   a4.xcoord=260;
   a4.ycoord=-150;
@@ -748,13 +747,13 @@ else if(scene == page3)
 
 //Simulation graphics
 function drawForpage1()
-{  
+{ 
   canvas = document.getElementById("simscreen");
   ctx = canvas.getContext("2d");
   ctx.clearRect(0,0,550,400);  //clears the complete canvas#simscreen everytime
   //if (flaggrashof)
   //{ 
-    
+  
 $('#titleincanvas').show();
 $('#datatable1').show();
 $('#datatable2').show(); 
@@ -877,8 +876,8 @@ drawrect(a,125,mass1,0,ctx,"#005500","#005500",0);
   ctx.arc(a.xcoord,a.ycoord,mass1/2,2*Math.PI,0);
   ctx.fill();
   ctx.stroke();
-  rot.xcoord=a.xcoord+(mass1/2-4)*Math.cos(w*t) ;
-  rot.ycoord=a.ycoord + (mass1/2-4)*Math.sin(w*t);
+  rot.xcoord=a.xcoord+(mass1/2-4);
+  rot.ycoord=a.ycoord;
   pointdisp(rot,ctx,3,"#000000","#000000",'','','');
   ctx.closePath();
 // drawrect(a1,50,30,0,ctx,"#005500","#005500",0);
@@ -1060,12 +1059,12 @@ pointjoin(c,d,ctx,"#005500",1);
   ctx.strokeStyle = "#000000";
 
   ctx.beginPath();
-  ctx.moveTo(d6.xcoord + 60, a.ycoord+(9+(m-10)/60));
+  ctx.moveTo(d6.xcoord + 60, d6.ycoord);
   ctx.lineTo(d6.xcoord + 60, d6.ycoord + 50);
   ctx.lineTo(d6.xcoord + 50, d6.ycoord + 50);
   ctx.lineTo(d6.xcoord + 70, d6.ycoord + 50);
   ctx.lineTo(d6.xcoord + 60, d6.ycoord + 50);
-  ctx.lineTo(d6.xcoord + 60, d6.ycoord - 10);
+  ctx.lineTo(d6.xcoord + 60, d6.ycoord -10);
 
 
   ctx.closePath();
@@ -1079,7 +1078,7 @@ pointjoin(c,d,ctx,"#005500",1);
   ctx.strokeStyle = "#000000";
 
   ctx.beginPath();
-  ctx.moveTo(a3.xcoord + 60, a3.ycoord -8);
+  ctx.moveTo(a3.xcoord + 60, a3.ycoord - 6);
   ctx.lineTo(a3.xcoord + 60, a3.ycoord - 24);
   ctx.lineTo(a3.xcoord + 72, a3.ycoord - 24);
   ctx.lineTo(a3.xcoord + 72, a3.ycoord - 80);
@@ -1119,15 +1118,10 @@ $('#datatable2').show();
   ptx=[];
   pty=[];
   }*/
-  
-  if(w_not!=w || k_not!=k || z_not!=z || F_not!=F || m_not!=m || update_page1)
+
+  if(w_not!=w || k_not!=k || z_not!=z || F_not!=F || m_not!=m)
   {
     j=100;
-    if(update_page1)
-    {update_page1 = false;
-    }ptx = [];
-    pty = [];
-    
   }
   ptx.push(a.xcoord+j);
   pty.push(a.ycoord);
@@ -1139,7 +1133,30 @@ $('#datatable2').show();
   m_not=m;
   k_not=k;
 }
+//function to check whether links satisfy grashof condition
+/*function checkGrashof()
+{
+  var links= new Array(4);
+  links[0]=r1;
+  links[1]=r2;
+  links[2]=r3;
+  links[3]=r4;
+  links.sort(function(p, q){return p-q});
+  var s=links[0];
+  var p=links[1];
+  var q=links[2];
+  var l=links[3];
+  if (s+l>p+q)
+  { 
+    flaggrashof=false;
+    
+  }
+  else 
+  {
+    flaggrashof=true;
 
+  }
+}*/
 function drawForpage2()
 {
   var MF_arr=[];
@@ -1151,125 +1168,53 @@ function drawForpage2()
   ctx = canvas.getContext("2d");
   ctx.clearRect(0,0,550,400); 
   var dps = [];
-  var x_val = [];
-  var y_val = [];
-
+  var chart = new CanvasJS.Chart("chartContainer", {
+  
+  title:{
+    text: ""
+  },
+  axisX: {
+    title:"n",
+  },
+  axisY:{
+    title: "Magnification Factor",
+    
+  },
+ 
+  data: [{
+    type: "spline",
+    name: "Magnification Factor",
+    markerSize: 0,
+    toolTipContent: "<b>Magnification Factor: </b>{x}<br/><b>: </b>{y}",
+    dataPoints: dps
+  }
+  ]
+});
   var xVal=0;
   var yVal=0;
   var updateInterval = 1000;
   var dataLength = 50;
   var updateChart = function (count) {
   count = count || 1;
-  
   // count is number of times loop runs to generate random dataPoints.
- 
-  for (var j = 0; j < 6; j=j+0.01) { 
+  for (var j = 0; j < count; j++) { 
     yVal = j*j/Math.sqrt(((1-j*j)* (1 - j * j))+(2*z*j)* (2 * z * j));
     dps.push({
       x: xVal,
       y: yVal
     });
-    
-    x_val.push(xVal);
-   y_val.push(yVal);
-    xVal=xVal+0.01;
+    xVal++;
   }
   
- 
+  chart.render();
 };
 
 updateChart(dataLength); 
-
+ 
+chart.render();
 enabled_img=true;
-n = w/Wn;
-n = w/Wn;
-if(n>6)
-  n=6;
-MF = n*n/Math.sqrt(((1-n*n)* (1 - n * n))+(2*z*n)* (2 * z * n));
-
-var ctx = document.getElementById("simscreen").getContext('2d');
-var chart = new Chart(ctx, {
-   
-    type: 'line',
-
-    data: {
-       
-        
-        datasets: [{
-            label: "Magnification Factor",
-            fill: false,
-          // backgroundColor: 'rgb(255, 255, 255)',
-            borderColor: 'rgb(0, 99, 132)',
-       
-            data: dps,
-            pointRadius: 0
-        },
-        {
-                data: [ {
-                    x: n,
-                    y: MF,
-                    r: 5
-                } ],
-                
-               
-                backgroundColor: "#cd2026",
-                type: 'bubble'
-            }
-        
-        
-        ]
-    },
-    options: {
-     
-      responsive: false,
-      maintainAspectRatio: true,
-      legend: {
-        display: false
-    },
-      scales: {
-        xAxes: [ {
-          display: true,
-          scaleLabel: {
-            display: true,
-            labelString: 'n'
-          },
-          type: 'linear',
-      ticks: {
-      suggestedMin: 0,
-      suggestedMax: 6,
-      stepSize: 1,
-      pointLabels :{
-           fontStyle: "bold",
-        },
-            major: {
-              fontStyle: 'bold',
-              fontColor: '#FF0000'
-            
-          }}
-        } ],
-        yAxes: [ {
-          display: true,
-          type: 'linear',
-      ticks: {
-      suggestedMin: 0,
-      suggestedMax: 10,
-      stepSize: 1
-   },
-          scaleLabel: {
-            display: true,
-            labelString: 'Magnification Factor'
-          }
-        } ]
-      }
-    }
-});
-
-chart.render({
-    duration: 10,
-    lazy: false,
-    easing: 'easeOutBounce'
-});
-
+ 
+ 
 
 
 }
@@ -1281,120 +1226,50 @@ function drawForpage3()
   ctx = canvas.getContext("2d");
   ctx.clearRect(0,0,550,400); 
   var dps_2 = [];
-  var x_val = [];
-  var y_val = [];
+  var chart = new CanvasJS.Chart("chartContainer", {
+  
+  title:{
+    text: ""
+  },
+  axisX: {
+    title:"n",
 
+  },
+  axisY:{
+    title: "Phase Angle",
+    
+  },
+  data: [{
+    type: "line",
+    toolTipContent: "<b>Phase Angle: </b>{x}<br/><b>: </b>{y}",
+    dataPoints: dps_2
+  }]
+}); 
 
   var xVal=0;
   var yVal=0;
   var updateInterval = 1000;
-  var dataLength = 10;
+  var dataLength = 50;
   var updateChart = function (count) {
   count = count || 1;
- 
-  for (var j = 0 ; j < 6; j = j+0.01) { 
+  // count is number of times loop runs to generate random dataPoints.
+  for (var j = 0; j < count; j++) { 
     yVal = Math.atan((2*z*j)/(1-j*j));
-    if(yVal<0)
-    yVal = Math.PI +  yVal;
-    yVal = (yVal * 180)/Math.PI;
     dps_2.push({
       x: xVal,
       y: yVal
     });
-
-    x_val.push(xVal);
-    y_val.push(yVal);
-    xVal=xVal+0.01;
-   
+    xVal++;
   }
-
-
+  
+  chart.render();
 };
 
 updateChart(dataLength); 
-n = w/Wn;
-if(n>6)
-  n=6;
-phi = Math.atan((2*z*n)/(1-n*n));
-if(phi<0)
-    phi = Math.PI +  phi;
-  phi = (phi * 180)/Math.PI;
-var ctx = document.getElementById("simscreen").getContext('2d');
-var chart = new Chart(ctx, {
-   
-    type: 'line',
+chart.render();
+chart.update();
 
-    
-    data: {
-        
-        
-        datasets: [{
-            label: "Phase Angle",
-            fill: false,
-          // backgroundColor: 'rgb(255, 255, 255)',
-            borderColor: 'rgb(0, 99, 132)',
-            data: dps_2,
-            pointRadius: 0
-        },
-        {
-                data: [ {
-                    x: n,
-                    y: phi,
-                    r: 5
-                } ],
-                
-               
-                backgroundColor: "#cd2026",
-                type: 'bubble'
-            }]
-    },
-
-    
-    options: {
-      responsive: false,
-      maintainAspectRatio: true,
-      legend: {
-        display: false
-    },
-      scales: {
-        xAxes: [ {
-          display: true,
-          scaleLabel: {
-            display: true,
-            labelString: 'n'
-          },
-          type: 'linear',
-      ticks: {
-      suggestedMin: 0,
-      suggestedMax: 6,
-      stepSize: 1
-   }
-        } ],
-        yAxes: [ {
-          display: true,
-          scaleLabel: {
-            display: true,
-            labelString: 'Phase Angle'
-          },
-          type: 'linear',
-      ticks: {
-      suggestedMin: 0,
-      suggestedMax: 180,
-      stepSize: 20
-   }
-        } ]
-      }
-    }
-});
-
-chart.render({
-    duration: 10,
-    lazy: false,
-    easing: 'easeOutBounce'
-});
-
-
-  enabled_img=false;
+ enabled_img=false;
  
  
 
@@ -1418,7 +1293,7 @@ while(i<pty.length)
 { 
   ctx.lineTo(pt[i],pty[i]);
   i++;
-  if (i>=230)
+  if (i>=800)
   {
     pty.splice(0,1);
     i=i-1;
@@ -1440,55 +1315,19 @@ function changeScene(value){
   else
     document.getElementById('simtitle').innerHTML = 'Phase Angle Graph';
 }
-// function changeSceneNext(){
-//   if(enabled_img == true)
-//   {
-//   if(scene == page3){ 
-//     scene = page1;
-//   }
- 
-//   else{
-//     scene++; 
-//   }
-//   changeScene(scene);
-// }
-// }
 function changeSceneNext(){
+  if(enabled_img == true)
+  {
   if(scene == page3){ 
-    scene = page1;
-    update_page1 = true;
-  }
-  else if(scene == page2){ 
-    scene = page3;
-  }
-  else if(scene == page1){ 
-    scene = page2;
-  }
-
-
-  
-  
-  changeScene(scene);
-}
-function changeScenePrev(){
- 
-  if(scene == page3){ 
-    scene = page2;
-  }
-  else if(scene == page2){ 
-    scene = page1;
-    update_page1 = true;
-  }
-  else if(scene == page1){ 
     scene = page3;
   }
 
-
-  
-  
+  else{
+    scene++; 
+  }
   changeScene(scene);
 }
-
+}
 
 // function changeScenePrev(){
 //   if(scene == page1){
@@ -1601,32 +1440,32 @@ send an email to adityaraman09@gmail.com for any communication
 <!-- System variable input from user through slider and spinner jQuery widgets 
 repeat block with new variable name and new id for widgets-->
 <div class="variable">
-<div class="varname"><p title="Spring Stiffness">k (N/m)</p>
+<div class="varname"><p title="Link Length">Stiffness k (N/m)</p>
 <input id="r1spinner"></input></div>
 <div id="r1slider"></div>
 </div>
 
 <div class="variable">
-<div class="varname"><p title="Mass of Block">M (kg)</p>
+<div class="varname"><p title="Link Length">mass (kg)</p>
 <input id="r2spinner"></input></div>
 <div id="r2slider"></div>
 </div>
 
 <div class="variable">
-<div class="varname"><p title="Damping Ratio">ζ</p>
+<div class="varname"><p title="Link Length">Damping ratio</p>
 <input id="r3spinner"></input></div>
 <div id="r3slider"></div>
 </div>
 
 <div class="variable">
-<div class="varname"><p title="Unbalance Moment">m (N-mm)</p>
+<div class="varname"><p title="Link Length">Unbalance (N-mm)</p>
 <input id="r4spinner"></input></div>
 <div id="r4slider"></div>
 </div>
 
 <div class="variable">
   <div class="varname">
-    <p title="Forcing Frequency">ω (rad/s)</p>
+    <p title="Link Length">Forcing Freq (rad/s)</p>
     <input id="r5spinner"></input>
   </div>
   <div id="r5slider"></div>
@@ -1644,7 +1483,7 @@ repeat block with new variable name and new id for widgets-->
 
 <!-- Region for User controls of simulation -->
 <div id="controls">
-<img id="playpausebutton" onclick="changeScenePrev()" src="sins/bluebkdulls.png" />
+<!-- <img id="playpausebutton" onclick="changeScenePrev()" src="sins/bluebkdulls.png" /> -->
 <img id="rotationbutton" onclick="changeSceneNext()" src="sins/bluefwddulls.png" />
 
 <!--
@@ -1657,7 +1496,7 @@ repeat block with new variable name and new id for widgets-->
 
 
 <!-- DND-Copyright display-->
-<div id="copyright" title="Developer : Ramya Bygari and Adithya Prabhu"> Copyright &copy; SOLVE The Virtual Lab @ NITK Surathkal </div>
+<div id="copyright" title="Developer : SOLVEr"> Copyright &copy; SOLVE The Virtual Lab @ NITK Surathkal </div>
 
 </div><!-- Container div close -->
 
