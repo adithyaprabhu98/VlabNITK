@@ -228,7 +228,7 @@ function drawForFixed()
   def = calculatDeflectionForFixed(load_point, load, load_point, wedgePosition);
   def=(Math.round(def*100)-Math.round(def)*100)/100+Math.round(def);
   printcomment("For MildSteel, E(Gpa): 200, I(mm^4): " + i +
-          ",  deflection at 'a'(mm): " + def/10
+          ",\n deflection at 'a'(mm): " + def/10
           ,0);
 
 
@@ -481,7 +481,7 @@ function drawForCantilever()
   def = calculatDeflectionForCantilever(load_point, load, load_point, wedgePosition);
   def=(Math.round(def*100)-Math.round(def)*100)/100+Math.round(def);
   printcomment("For MildSteel, E(Gpa): 200, I(mm^4): " + i +
-          ",  deflection at 'a'(mm): " + def
+          ", \n deflection at 'a'(mm): " + def
           ,0);
 
   var start = new point(x_offset+support_width/2, o.ycoord);
@@ -702,7 +702,7 @@ function drawForSimplySupported(){
   def = calculatDeflectionForSimplySupported(load_point, load, load_point, wedgePosition);
   def=(Math.round(def*100)-Math.round(def)*100)/100+Math.round(def);
   printcomment("For MildSteel, E(Gpa): 200, I(mm^4): " + i +
-  				",  deflection at 'a'(mm): " + def/10
+  				", \n deflection at 'a'(mm): " + def/10
   				,0);
 
   var start = new point(x_offset+support_width/2, o.ycoord);
@@ -1177,7 +1177,7 @@ function printcomment(commenttext,commentloc)
   if(commentloc==0)
   {
   document.getElementById('commentboxright').style.visibility='hidden';
-  document.getElementById('commentboxleft').style.width='570px';
+  document.getElementById('commentboxleft').style.width='350px';
   document.getElementById('commentboxleft').innerHTML = commenttext;
   }
   else if(commentloc==1)
